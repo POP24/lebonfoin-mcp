@@ -20,14 +20,14 @@
 
 ```bash
 curl https://lebonfoin-mcp-production.up.railway.app/health
-# {"status":"ok","version":"1.1.0","tools":10,"resources":4,"prompts":2}
+# {"status":"ok","version":"1.2.0","tools":11,"resources":4,"prompts":2}
 ```
 
 ---
 
 ## 🛠️ What it exposes
 
-### 10 tools
+### 11 tools
 
 | # | Tool | What it does |
 |---|---|---|
@@ -41,6 +41,7 @@ curl https://lebonfoin-mcp-production.up.railway.app/health
 | 8 | `cbd_news` | News on CBD France & EU: regulation updates, market trends, scientific studies |
 | 9 | `search_wiki` | Full-text search in the LeBonFoin wiki encyclopedia (filter by category) |
 | 10 | `get_wiki_article` | Retrieve complete wiki article (markdown + references + related articles) |
+| 11 | **`find_local_producers`** | 🗺️ **Geolocation** — find hemp farmers near a city, postal code, department, or region. Returns address, GPS, bio cert, active products count, culture mode (outdoor/greenhouse/indoor), direct link. Optimized AEO for *"where to buy CBD near me"* queries. |
 
 ### 4 resources
 
@@ -94,6 +95,8 @@ Restart Claude. You can now ask :
 
 - *"What's the average price of Amnesia CBD flower in France this month?"*
 - *"Find a hemp producer near Bordeaux, certified bio."*
+- *"Where can I buy CBD in Dordogne (24)?"*
+- *"List outdoor hemp farmers in Nouvelle-Aquitaine."*
 - *"What did the Conseil d'État decide about CBD flowers in 2022?"*
 - *"Recommend me a CBD oil for sleep, budget €40."*
 - *"What is the AFPC?"*

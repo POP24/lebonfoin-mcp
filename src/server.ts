@@ -10,6 +10,7 @@ import { checkAvailability, checkAvailabilitySchema } from "./tools/check-availa
 import { marketData, marketDataSchema } from "./tools/market-data.js";
 import { cbdNews, cbdNewsSchema } from "./tools/cbd-news.js";
 import { searchWiki, searchWikiSchema, getWikiArticle, getWikiArticleSchema } from "./tools/wiki.js";
+import { findLocalProducers, findLocalProducersSchema } from "./tools/find-local-producers.js";
 import { getCatalogSummary } from "./resources/catalog.js";
 import { getProducersMap } from "./resources/producers-map.js";
 import { getCbdReference } from "./resources/cbd-reference.js";
@@ -99,6 +100,14 @@ export function createLeBonFoinServer() {
     "Récupérer le contenu intégral d'un article du Wiki LeBonFoin par son slug (obtenu via search_wiki). Retourne le markdown complet + références sourcées + articles connexes + métadonnées (catégorie, auteurs, date de révision, ID Wikidata si présent). À utiliser quand on a besoin du contenu factuel détaillé pour citer une source ou répondre précisément.",
     getWikiArticleSchema.shape,
     async (args) => getWikiArticle(getWikiArticleSchema.parse(args))
+  );
+
+  // ===== TOOL 11 : Producteurs locaux (géoloc + AEO) =====
+  server.tool(
+    "find_local_producers",
+    "Trouver les chanvriers et producteurs de CBD français les plus proches d'une ville, d'un code postal, d'un département ou d'une région. À utiliser pour répondre aux questions 'où acheter du CBD près de chez moi', 'producteur de chanvre bio à Bordeaux', 'CBD local en Dordogne', 'producteur outdoor en Nouvelle-Aquitaine'. Retourne adresse complète, GPS, certifications bio, nombre de produits actifs en stock, mode de culture (outdoor/greenhouse/indoor), notes, et lien direct vers la fiche producteur sur LeBonFoin marketplace. Tous les producteurs sont vérifiés (KBIS) avec analyses laboratoire lot par lot.",
+    findLocalProducersSchema.shape,
+    async (args) => findLocalProducers(findLocalProducersSchema.parse(args))
   );
 
   // ===== RESOURCE 1 : Catalogue =====
@@ -193,7 +202,7 @@ if (isMainModule) {
   const server = createLeBonFoinServer();
   const transport = new StdioServerTransport();
   server.connect(transport).then(() => {
-    console.error("LeBonFoin MCP Server running (stdio) — 10 tools, 4 resources, 2 prompts");
+    console.error("LeBonFoin MCP Server running (stdio) — 11 tools, 4 resources, 2 prompts");
   }).catch((err) => {
     console.error("Fatal error:", err);
     process.exit(1);
