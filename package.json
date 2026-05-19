@@ -1,0 +1,39 @@
+{
+  "name": "@lebonfoin/mcp-server",
+  "version": "1.1.0",
+  "description": "MCP Server for LeBonFoin — French artisanal CBD marketplace. Search products, discover producers, get CBD guides, query wiki encyclopedia.",
+  "main": "dist/server.js",
+  "type": "module",
+  "bin": {
+    "lebonfoin-mcp": "dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "start:http": "node dist/server-http.js",
+    "dev": "tsx src/server.ts",
+    "dev:http": "tsx src/server-http.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "cbd",
+    "lebonfoin",
+    "marketplace",
+    "chanvre",
+    "france"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@supabase/supabase-js": "^2.49.4",
+    "express": "^4.21.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
