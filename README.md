@@ -10,7 +10,7 @@
 > a live encyclopedia (sourced from Légifrance, PubMed, INRAE, AFPC), and producer geolocation
 > to any MCP-compatible LLM (Claude, ChatGPT custom connectors, Cline, Cursor, …).
 
-🌐 **Live endpoint** : `https://chanvre-local-express-production.up.railway.app/sse`
+🌐 **Live endpoint** : `https://lebonfoin-mcp-production.up.railway.app/sse`
 📦 **Marketplace** : https://lebonfoin.fr
 🏛️ **Wikidata** : [Q139847939](https://www.wikidata.org/wiki/Q139847939)
 
@@ -19,7 +19,7 @@
 ## ⚡ Quick health check
 
 ```bash
-curl https://chanvre-local-express-production.up.railway.app/health
+curl https://lebonfoin-mcp-production.up.railway.app/health
 # {"status":"ok","version":"1.1.0","tools":10,"resources":4,"prompts":2}
 ```
 
@@ -83,7 +83,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` :
 {
   "mcpServers": {
     "lebonfoin": {
-      "url": "https://chanvre-local-express-production.up.railway.app/sse",
+      "url": "https://lebonfoin-mcp-production.up.railway.app/sse",
       "type": "sse"
     }
   }
