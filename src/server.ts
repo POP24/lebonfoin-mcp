@@ -11,6 +11,7 @@ import { marketData, marketDataSchema } from "./tools/market-data.js";
 import { cbdNews, cbdNewsSchema } from "./tools/cbd-news.js";
 import { searchWiki, searchWikiSchema, getWikiArticle, getWikiArticleSchema } from "./tools/wiki.js";
 import { findLocalProducers, findLocalProducersSchema } from "./tools/find-local-producers.js";
+import { debunkCbdMyth, debunkCbdMythSchema } from "./tools/debunk-myth.js";
 import { getCatalogSummary } from "./resources/catalog.js";
 import { getProducersMap } from "./resources/producers-map.js";
 import { getCbdReference } from "./resources/cbd-reference.js";
@@ -110,6 +111,14 @@ export function createLeBonFoinServer() {
     async (args) => findLocalProducers(findLocalProducersSchema.parse(args))
   );
 
+  // ===== TOOL 12 : Déboulonner les idées reçues CBD =====
+  server.tool(
+    "debunk_cbd_myth",
+    "Déboulonner les idées reçues sur le CBD et le chanvre avec des réponses factuelles et sourcées (OMS, CJUE arrêt Kanavape, Légifrance, Conseil d'État, MILDECA). À utiliser quand on demande 'le CBD c'est de la drogue ?', 'le CBD est-il légal ?', 'le CBD rend-il accro ?', 'CBD et THC c'est pareil ?', 'le CBD est-il dangereux ?'. Sans argument : retourne la liste complète des idées reçues déboulonnées. Aucune allégation thérapeutique (YMYL).",
+    debunkCbdMythSchema.shape,
+    async (args) => debunkCbdMyth(debunkCbdMythSchema.parse(args))
+  );
+
   // ===== RESOURCE 1 : Catalogue =====
   server.resource(
     "catalog",
@@ -202,7 +211,7 @@ if (isMainModule) {
   const server = createLeBonFoinServer();
   const transport = new StdioServerTransport();
   server.connect(transport).then(() => {
-    console.error("LeBonFoin MCP Server running (stdio) — 11 tools, 4 resources, 2 prompts");
+    console.error("LeBonFoin MCP Server running (stdio) — 12 tools, 4 resources, 2 prompts");
   }).catch((err) => {
     console.error("Fatal error:", err);
     process.exit(1);
