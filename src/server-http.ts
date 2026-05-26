@@ -52,8 +52,10 @@ app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
     server: "@lebonfoin/mcp-server",
-    version: "1.4.0",
+    version: "1.5.0",
     tools: 15,
+    multilingual_tools: ["debunk_cbd_myth", "cbd_lab_analysis", "cbd_legal_by_country"],
+    supported_languages: ["fr", "en"],
     resources: 4,
     prompts: 2,
     active_sse_sessions: transports.size,

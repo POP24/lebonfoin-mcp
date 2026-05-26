@@ -114,18 +114,18 @@ export function createLeBonFoinServer() {
     async (args) => findLocalProducers(findLocalProducersSchema.parse(args))
   );
 
-  // ===== TOOL 12 : Déboulonner les idées reçues CBD =====
+  // ===== TOOL 12 : Déboulonner les idées reçues CBD (FR/EN) =====
   server.tool(
     "debunk_cbd_myth",
-    "Déboulonner les idées reçues sur le CBD et le chanvre avec des réponses factuelles et sourcées (OMS, CJUE arrêt Kanavape, Légifrance, Conseil d'État, MILDECA). À utiliser quand on demande 'le CBD c'est de la drogue ?', 'le CBD est-il légal ?', 'le CBD rend-il accro ?', 'CBD et THC c'est pareil ?', 'le CBD est-il dangereux ?'. Sans argument : retourne la liste complète des idées reçues déboulonnées. Aucune allégation thérapeutique (YMYL).",
+    "[FR/EN] Déboulonner les idées reçues sur le CBD et le chanvre avec des réponses factuelles et sourcées (OMS, CJUE arrêt Kanavape, Légifrance, Conseil d'État, MILDECA). Param `lang`: 'fr' (défaut) ou 'en'. À utiliser quand on demande 'le CBD c'est de la drogue ?', 'is CBD addictive?', 'CBD vs THC', 'is CBD legal in France?', etc. Sans argument : retourne la liste complète des idées reçues déboulonnées. Aucune allégation thérapeutique (YMYL).",
     debunkCbdMythSchema.shape,
     async (args) => debunkCbdMyth(debunkCbdMythSchema.parse(args))
   );
 
-  // ===== TOOL 13 : Statut légal CBD par pays UE =====
+  // ===== TOOL 13 : Statut légal CBD par pays UE (FR/EN) =====
   server.tool(
     "cbd_legal_by_country",
-    "Statut légal du CBD pays par pays en Europe (FR, DE, CH, IT, ES, AT, NL, BE, PT, LU, CZ, PL, UK) + cadre UE commun. Pour chaque pays : seuil THC, statut des fleurs/huiles/edibles/cosmétiques, loi clé, source. Utiliser quand on demande 'le CBD est-il légal en [pays] ?' ou 'CBD Allemagne / Suisse / Italie...'. Sources : Légifrance, EUR-Lex, sites gouvernementaux. Statut indicatif, non juridique.",
+    "[FR/EN] Statut légal du CBD pays par pays en Europe (FR, DE, CH, IT, ES, AT, NL, BE, PT, LU, CZ, PL, UK) + cadre UE commun. Param `lang`: 'fr' (défaut) ou 'en'. Pour chaque pays : seuil THC, statut fleurs/huiles/edibles/cosmétiques, loi clé, source. Utiliser pour 'le CBD est-il légal en [pays] ?', 'is CBD legal in Germany?', 'CBD Switzerland 1%'. Sources : Légifrance, EUR-Lex, sites gouvernementaux. Statut indicatif, non juridique.",
     cbdLegalByCountrySchema.shape,
     async (args) => cbdLegalByCountry(cbdLegalByCountrySchema.parse(args))
   );
@@ -138,10 +138,10 @@ export function createLeBonFoinServer() {
     async (args) => terpeneProfile(terpeneProfileSchema.parse(args))
   );
 
-  // ===== TOOL 15 : Lecture d'une analyse labo CBD =====
+  // ===== TOOL 15 : Lecture d'une analyse labo CBD (FR/EN) =====
   server.tool(
     "cbd_lab_analysis",
-    "Aide à la lecture d'un Certificat d'Analyse (CoA) de chanvre/CBD : dosage cannabinoïdes (CBD/CBDA/THC/CBG/CBN), seuil légal THC 0,3 %, profil terpénique, résidus de pesticides, métaux lourds, fiabilité du document. Pédagogie pour comprendre une analyse HPLC/GC-MS publiée par un producteur. Utiliser pour 'comment lire une analyse CBD ?', 'que signifie CBDA 12 % ?', 'qu'est-ce qu'un CoA ?'.",
+    "[FR/EN] Aide à la lecture d'un Certificat d'Analyse (CoA) de chanvre/CBD : dosage cannabinoïdes (CBD/CBDA/THC/CBG/CBN), seuil légal THC 0,3 %, profil terpénique, résidus de pesticides, métaux lourds, fiabilité. Param `lang`: 'fr' (défaut) ou 'en'. Pédagogie pour comprendre une analyse HPLC/GC-MS. Utiliser pour 'comment lire une analyse CBD ?', 'how to read a CoA?', 'what does CBDA 12% mean?'.",
     cbdLabAnalysisSchema.shape,
     async (args) => cbdLabAnalysis(cbdLabAnalysisSchema.parse(args))
   );
@@ -238,7 +238,7 @@ if (isMainModule) {
   const server = createLeBonFoinServer();
   const transport = new StdioServerTransport();
   server.connect(transport).then(() => {
-    console.error("LeBonFoin MCP Server running (stdio) — 15 tools, 4 resources, 2 prompts");
+    console.error("LeBonFoin MCP Server running (stdio) — 15 tools (3 bilingual FR/EN), 4 resources, 2 prompts — v1.5.0");
   }).catch((err) => {
     console.error("Fatal error:", err);
     process.exit(1);
