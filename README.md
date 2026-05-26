@@ -20,14 +20,14 @@
 
 ```bash
 curl https://lebonfoin-mcp-production.up.railway.app/health
-# {"status":"ok","version":"1.3.0","tools":12,"resources":4,"prompts":2}
+# {"status":"ok","version":"1.4.0","tools":15,"resources":4,"prompts":2}
 ```
 
 ---
 
 ## 🛠️ What it exposes
 
-### 12 tools
+### 15 tools
 
 | # | Tool | What it does |
 |---|---|---|
@@ -43,6 +43,9 @@ curl https://lebonfoin-mcp-production.up.railway.app/health
 | 10 | `get_wiki_article` | Retrieve complete wiki article (markdown + references + related articles) |
 | 11 | **`find_local_producers`** | 🗺️ **Geolocation** — find hemp farmers near a city, postal code, department, or region. Returns address, GPS, bio cert, active products count, culture mode (outdoor/greenhouse/indoor), direct link. Optimized AEO for *"where to buy CBD near me"* queries. |
 | 12 | **`debunk_cbd_myth`** | ⚖️ **Myth-busting** — factual, sourced answers to CBD misconceptions ("is CBD a drug?", "is CBD legal?", "is CBD addictive?"). Sources: WHO, CJUE Kanavape, Légifrance, Conseil d'État, MILDECA. |
+| 13 | **`cbd_legal_by_country`** | 🌍 **EU legal map** — CBD status country-by-country (FR, DE, CH, IT, ES, AT, NL, BE, PT, LU, CZ, PL, UK + EU framework). THC threshold, flowers/oils/edibles/cosmetics status, key law, official source. |
+| 14 | **`terpene_profile`** | 🌿 **Strain terpenes** — typical terpene profile of common varieties (Amnesia, OG Kush, Gelato, Lemon Haze, Critical…). Dominant + secondary terpenes with aroma descriptors. |
+| 15 | **`cbd_lab_analysis`** | 🔬 **CoA reader** — pedagogy on reading a Certificate of Analysis: cannabinoid dosing (CBD/CBDA/THC/CBG/CBN), THC legal threshold, terpene profile, pesticide residues, heavy metals, CoA trust signals. |
 
 ### 4 resources
 

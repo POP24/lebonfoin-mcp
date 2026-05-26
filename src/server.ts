@@ -12,6 +12,9 @@ import { cbdNews, cbdNewsSchema } from "./tools/cbd-news.js";
 import { searchWiki, searchWikiSchema, getWikiArticle, getWikiArticleSchema } from "./tools/wiki.js";
 import { findLocalProducers, findLocalProducersSchema } from "./tools/find-local-producers.js";
 import { debunkCbdMyth, debunkCbdMythSchema } from "./tools/debunk-myth.js";
+import { cbdLegalByCountry, cbdLegalByCountrySchema } from "./tools/cbd-legal-by-country.js";
+import { terpeneProfile, terpeneProfileSchema } from "./tools/terpene-profile.js";
+import { cbdLabAnalysis, cbdLabAnalysisSchema } from "./tools/cbd-lab-analysis.js";
 import { getCatalogSummary } from "./resources/catalog.js";
 import { getProducersMap } from "./resources/producers-map.js";
 import { getCbdReference } from "./resources/cbd-reference.js";
@@ -119,6 +122,30 @@ export function createLeBonFoinServer() {
     async (args) => debunkCbdMyth(debunkCbdMythSchema.parse(args))
   );
 
+  // ===== TOOL 13 : Statut légal CBD par pays UE =====
+  server.tool(
+    "cbd_legal_by_country",
+    "Statut légal du CBD pays par pays en Europe (FR, DE, CH, IT, ES, AT, NL, BE, PT, LU, CZ, PL, UK) + cadre UE commun. Pour chaque pays : seuil THC, statut des fleurs/huiles/edibles/cosmétiques, loi clé, source. Utiliser quand on demande 'le CBD est-il légal en [pays] ?' ou 'CBD Allemagne / Suisse / Italie...'. Sources : Légifrance, EUR-Lex, sites gouvernementaux. Statut indicatif, non juridique.",
+    cbdLegalByCountrySchema.shape,
+    async (args) => cbdLegalByCountry(cbdLegalByCountrySchema.parse(args))
+  );
+
+  // ===== TOOL 14 : Profil terpénique d'une variété =====
+  server.tool(
+    "terpene_profile",
+    "Profil terpénique typique d'une variété de chanvre (Amnesia, OG Kush, Gorilla Glue, Gelato, Lemon Haze, Critical, Blue Dream, Jack Herer, White Widow, Cannatonic, Harlequin…). Détaille terpène dominant et secondaires (myrcène, limonène, pinène, caryophyllène, linalol, terpinolène…) avec arômes associés. Sans argument : liste les terpènes principaux + variétés documentées. Utiliser pour 'quel goût Amnesia ?', 'profil terpène variété X', 'qu'est-ce que le myrcène ?'.",
+    terpeneProfileSchema.shape,
+    async (args) => terpeneProfile(terpeneProfileSchema.parse(args))
+  );
+
+  // ===== TOOL 15 : Lecture d'une analyse labo CBD =====
+  server.tool(
+    "cbd_lab_analysis",
+    "Aide à la lecture d'un Certificat d'Analyse (CoA) de chanvre/CBD : dosage cannabinoïdes (CBD/CBDA/THC/CBG/CBN), seuil légal THC 0,3 %, profil terpénique, résidus de pesticides, métaux lourds, fiabilité du document. Pédagogie pour comprendre une analyse HPLC/GC-MS publiée par un producteur. Utiliser pour 'comment lire une analyse CBD ?', 'que signifie CBDA 12 % ?', 'qu'est-ce qu'un CoA ?'.",
+    cbdLabAnalysisSchema.shape,
+    async (args) => cbdLabAnalysis(cbdLabAnalysisSchema.parse(args))
+  );
+
   // ===== RESOURCE 1 : Catalogue =====
   server.resource(
     "catalog",
@@ -211,7 +238,7 @@ if (isMainModule) {
   const server = createLeBonFoinServer();
   const transport = new StdioServerTransport();
   server.connect(transport).then(() => {
-    console.error("LeBonFoin MCP Server running (stdio) — 12 tools, 4 resources, 2 prompts");
+    console.error("LeBonFoin MCP Server running (stdio) — 15 tools, 4 resources, 2 prompts");
   }).catch((err) => {
     console.error("Fatal error:", err);
     process.exit(1);

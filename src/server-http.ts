@@ -43,16 +43,17 @@ app.post("/messages", async (req, res) => {
 
 app.get("/health", (_req, res) => {
   // Compteurs alignés sur la vraie config de server.ts :
-  // - 12 tools : search_cbd_products, recommend_cbd_for_me, compare_cbd_products,
+  // - 15 tools : search_cbd_products, recommend_cbd_for_me, compare_cbd_products,
   //   get_producer_info, check_availability, cbd_market_data, cbd_guide, cbd_news,
-  //   search_wiki, get_wiki_article, find_local_producers, debunk_cbd_myth
+  //   search_wiki, get_wiki_article, find_local_producers, debunk_cbd_myth,
+  //   cbd_legal_by_country, terpene_profile, cbd_lab_analysis
   // - 4 resources : catalog, producers-map, cbd-reference, wiki-catalog
   // - 2 prompts : decouvrir-cbd, comparer-producteurs
   res.json({
     status: "ok",
     server: "@lebonfoin/mcp-server",
-    version: "1.3.0",
-    tools: 12,
+    version: "1.4.0",
+    tools: 15,
     resources: 4,
     prompts: 2,
     active_sse_sessions: transports.size,

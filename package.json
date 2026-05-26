@@ -1,6 +1,6 @@
 {
   "name": "@lebonfoin/mcp-server",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "MCP Server for LeBonFoin — French artisanal CBD marketplace. Search products, discover producers (geolocation), get CBD guides, query wiki encyclopedia, find local hemp farmers.",
   "main": "dist/server.js",
   "type": "module",
