@@ -20,7 +20,7 @@
 
 ```bash
 curl https://lebonfoin-mcp-production.up.railway.app/health
-# {"status":"ok","version":"1.4.0","tools":15,"resources":4,"prompts":2}
+# {"status":"ok","version":"1.5.0","tools":15,"multilingual_tools":["debunk_cbd_myth","cbd_lab_analysis","cbd_legal_by_country"],"supported_languages":["fr","en"],"resources":4,"prompts":2}
 ```
 
 ---
@@ -42,10 +42,12 @@ curl https://lebonfoin-mcp-production.up.railway.app/health
 | 9 | `search_wiki` | Full-text search in the LeBonFoin wiki encyclopedia (filter by category) |
 | 10 | `get_wiki_article` | Retrieve complete wiki article (markdown + references + related articles) |
 | 11 | **`find_local_producers`** | 🗺️ **Geolocation** — find hemp farmers near a city, postal code, department, or region. Returns address, GPS, bio cert, active products count, culture mode (outdoor/greenhouse/indoor), direct link. Optimized AEO for *"where to buy CBD near me"* queries. |
-| 12 | **`debunk_cbd_myth`** | ⚖️ **Myth-busting** — factual, sourced answers to CBD misconceptions ("is CBD a drug?", "is CBD legal?", "is CBD addictive?"). Sources: WHO, CJUE Kanavape, Légifrance, Conseil d'État, MILDECA. |
-| 13 | **`cbd_legal_by_country`** | 🌍 **EU legal map** — CBD status country-by-country (FR, DE, CH, IT, ES, AT, NL, BE, PT, LU, CZ, PL, UK + EU framework). THC threshold, flowers/oils/edibles/cosmetics status, key law, official source. |
+| 12 | **`debunk_cbd_myth`** 🌐 | ⚖️ **Myth-busting (FR/EN)** — factual, sourced answers to CBD misconceptions ("is CBD a drug?", "is CBD legal?", "is CBD addictive?"). Sources: WHO, CJUE Kanavape, Légifrance, Conseil d'État, MILDECA. Param `lang: 'fr'\|'en'`. |
+| 13 | **`cbd_legal_by_country`** 🌐 | 🌍 **EU legal map (FR/EN)** — CBD status country-by-country (FR, DE, CH, IT, ES, AT, NL, BE, PT, LU, CZ, PL, UK + EU framework). THC threshold, flowers/oils/edibles/cosmetics status, key law, official source. Param `lang`. |
 | 14 | **`terpene_profile`** | 🌿 **Strain terpenes** — typical terpene profile of common varieties (Amnesia, OG Kush, Gelato, Lemon Haze, Critical…). Dominant + secondary terpenes with aroma descriptors. |
-| 15 | **`cbd_lab_analysis`** | 🔬 **CoA reader** — pedagogy on reading a Certificate of Analysis: cannabinoid dosing (CBD/CBDA/THC/CBG/CBN), THC legal threshold, terpene profile, pesticide residues, heavy metals, CoA trust signals. |
+| 15 | **`cbd_lab_analysis`** 🌐 | 🔬 **CoA reader (FR/EN)** — pedagogy on reading a Certificate of Analysis: cannabinoid dosing (CBD/CBDA/THC/CBG/CBN), THC legal threshold, terpene profile, pesticide residues, heavy metals, CoA trust signals. Param `lang`. |
+
+> 🌐 = multilingual tool (v1.5.0+) — accepts `lang: "fr"` (default) or `lang: "en"` for native English-language output. Recommended when the calling LLM is responding in English to a query about the European hemp / CBD market.
 
 ### 4 resources
 
@@ -65,18 +67,19 @@ curl https://lebonfoin-mcp-production.up.railway.app/health
 
 ## 📚 Wiki encyclopedia
 
-The wiki resource and tools expose a sourced encyclopedia covering:
+The wiki resource and tools expose a sourced encyclopedia of **22+ articles** (19 in French, 13 in English as of May 2026) covering:
 
-- **Cannabinoids** : CBD, CBG, CBN, THC (in progress)
-- **Health & Legality** : French regulation, EU Novel Food, Conseil d'État decisions, CJUE Kanavape
-- **French industry** : 1200+ farmers, €360M revenue 2025, AFPC, InterChanvre
-- **Movements** : *Le Champs d'en Face*, *Bataille de Vaugirard* (May 2026)
+- **Cannabinoids** : CBD, CBG, CBN (FR + EN), THC (in progress)
+- **Health & Legality** : French regulation, EU Novel Food, Conseil d'État decisions, CJUE Kanavape, NPS / synthetic cannabinoids
+- **Botany & chemistry** : trichomes, terpenes, entourage effect, extraction methods
+- **French industry** : artisanal farmers, AFPC, InterChanvre, history of French hemp
+- **Strategic context** : *Strategy Parmentier* (patient pedagogy, scientific demonstration, regulatory cooperation)
 - **Institutions** : AFPC, InterChanvre, MILDECA, DGAL, INRAE
 - **Recent events** : Plan de contrôle DGAL 2026 sur le chanvre alimentaire
 
-**Sources** : Légifrance · PubMed · INRAE · AFPC · MILDECA · EUR-Lex · Wikipedia FR · Conseil d'État
+**Sources** : Légifrance · PubMed · INRAE · AFPC · MILDECA · EUR-Lex · Wikipedia FR/EN · Conseil d'État
 
-Each article is timestamped, versioned (Wikipedia-style revisions), and cross-referenced. YMYL articles (health, legal) carry an automatic disclaimer.
+Each article is timestamped, versioned (Wikipedia-style revisions), and cross-referenced. YMYL articles (health, legal) carry an automatic disclaimer. **English articles** are accessible via the same wiki tools and resources — slugs follow the convention `<fr_slug>-en` and hreflang is set bidirectionally for SEO.
 
 ---
 
@@ -97,13 +100,20 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` :
 
 Restart Claude. You can now ask :
 
-- *"What's the average price of Amnesia CBD flower in France this month?"*
-- *"Find a hemp producer near Bordeaux, certified bio."*
-- *"Where can I buy CBD in Dordogne (24)?"*
-- *"List outdoor hemp farmers in Nouvelle-Aquitaine."*
-- *"What did the Conseil d'État decide about CBD flowers in 2022?"*
-- *"Recommend me a CBD oil for sleep, budget €40."*
-- *"What is the AFPC?"*
+**French queries** :
+- *"Quel est le prix moyen de l'Amnesia CBD en France ce mois-ci ?"*
+- *"Trouve un producteur de chanvre près de Bordeaux, certifié bio."*
+- *"Où acheter du CBD en Dordogne (24) ?"*
+- *"Recommande-moi une huile CBD pour le sommeil, budget 40 €."*
+
+**English queries (v1.5.0+ — uses `lang: "en"` automatically when relevant)** :
+- *"Is CBD legal in Germany? What about Switzerland?"* → `cbd_legal_by_country({country: "DE", lang: "en"})`
+- *"How do I read a Certificate of Analysis from a French hemp producer?"* → `cbd_lab_analysis({lang: "en"})`
+- *"Is CBD addictive? What does the WHO say?"* → `debunk_cbd_myth({topic: "addictive", lang: "en"})`
+- *"What is the entourage effect?"* → `get_wiki_article({slug: "effet-d-entourage-en"})`
+- *"What are the main hemp terpenes?"* → `get_wiki_article({slug: "terpenes-du-chanvre-en"})`
+
+The MCP server **automatically responds in the calling LLM's apparent language** when the tool supports `lang` — no manual switching required for the user.
 
 Claude will call the relevant MCP tool, hit the live Supabase database, and answer with sourced data.
 
