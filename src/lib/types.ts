@@ -11,7 +11,10 @@ export interface ProductResult {
   is_bio: boolean | null;
   terpene_profile: string[] | null;
   grammages: string[] | null;
-  producer: {
+  // PostgREST renvoie la jointure sous la clé = nom de la relation ("producers").
+  // (renommé depuis "producer" 2026-05-28 : bug qui crashait search_cbd_products
+  //  car p.producer était undefined → "Cannot read properties of undefined").
+  producers: {
     name: string;
     slug: string;
     department: string | null;

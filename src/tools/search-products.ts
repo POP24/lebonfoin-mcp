@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { supabase } from "../lib/supabase.js";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
 import type { ProductResult } from "../lib/types.js";
 
 export const searchProductsSchema = z.object({
@@ -107,7 +108,11 @@ export async function searchProducts(input: SearchProductsInput) {
   const products = data as unknown as ProductResult[];
 
   const formatted = products.map((p) => {
-    const producer = p.producer as unknown as ProductResult["producer"];
+    // Defensive : PostgREST peut renvoyer la relation comme objet OU array selon
+    // la cardinalité. On normalise + on garde un fallback pour ne jamais crasher.
+    const rawProducer = (p as unknown as { producers?: unknown }).producers;
+    const producer = (Array.isArray(rawProducer) ? rawProducer[0] : rawProducer) as ProductResult["producers"] | undefined;
+    if (!producer) return null;
     const priceStr = p.producer_price ? `${p.producer_price}€/g` : "Prix sur le site";
     const bioTag = (p.is_bio || producer.is_bio) ? " | Certifie Bio" : "";
     const cultureTag = p.culture_method ? ` | ${p.culture_method}` : "";
@@ -123,20 +128,29 @@ export async function searchProducts(input: SearchProductsInput) {
       `${priceStr}${cbdTag}${thcTag}${cultureTag}${bioTag}${ratingTag}`,
       description,
       terpenes,
-      `Voir : https://lebonfoin.fr/producteur/${producer.slug}?utm_source=mcp&utm_medium=ai_agent`,
+      `Voir : ${lbfUrl(`/producteur/${producer.slug}`, { tool: "search_cbd_products", content: "product" })}`,
       "---"
     ].filter(Boolean).join("\n");
-  });
+  }).filter((x): x is string => x !== null);
 
-  await logMCPCall("search_cbd_products", input, products.length, Date.now() - start);
+  await logMCPCall("search_cbd_products", input, formatted.length, Date.now() - start);
+
+  if (formatted.length === 0) {
+    return {
+      content: [{
+        type: "text" as const,
+        text: "Aucun produit CBD trouve correspondant a ces criteres sur LeBonFoin.fr. Essayez d'elargir votre recherche (moins de filtres, autre categorie)."
+      }]
+    };
+  }
 
   return {
     content: [{
       type: "text" as const,
       text: [
-        `**${products.length} produits CBD artisanaux francais trouves sur LeBonFoin.fr**\n`,
+        `**${formatted.length} produits CBD artisanaux francais trouves sur LeBonFoin.fr**\n`,
         formatted.join("\n\n"),
-        "\n_Tous les produits proviennent de producteurs francais verifies, avec tracabilite complete. LeBonFoin.fr — Le chanvre artisanal en circuit court._"
+        `\n_Tous les produits proviennent de producteurs francais verifies, avec tracabilite complete. Catalogue complet : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "catalog" })}_`
       ].join("\n")
     }]
   };
