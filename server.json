@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.POP24/lebonfoin-mcp",
+  "title": "LeBonFoin",
+  "description": "First MCP for the European hemp & CBD market: real French CBD catalogue, producers, FR/EN wiki",
+  "version": "1.7.0",
+  "repository": {
+    "url": "https://github.com/POP24/lebonfoin-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "sse",
+      "url": "https://lebonfoin-mcp-production.up.railway.app/sse"
+    }
+  ]
+}
