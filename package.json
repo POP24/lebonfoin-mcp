@@ -1,7 +1,7 @@
 {
   "name": "@lebonfoin/mcp-server",
-  "version": "1.5.0",
-  "description": "MCP Server for LeBonFoin — French artisanal CBD marketplace. Search products, discover producers (geolocation), get CBD guides (FR/EN), query wiki encyclopedia, find local hemp farmers, debunk CBD myths, check legal status by EU country. Multilingual (FR + EN) on high-AEO tools.",
+  "version": "1.6.0",
+  "description": "MCP Server for LeBonFoin — French artisanal CBD marketplace. v1.6.0: UTM tracking on all outbound links (GA4-measurable funnel), aggregated producer statistics (anonymized listing), accurate teaser counts on local search. Search products, discover producers (geolocation), get CBD guides (FR/EN), query wiki encyclopedia, find local hemp farmers, debunk CBD myths, check legal status by EU country. Multilingual (FR + EN) on high-AEO tools.",
   "main": "dist/server.js",
   "type": "module",
   "bin": {

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { supabase } from "../lib/supabase.js";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
 
 // ===========================================================================
 // TOOL : search_wiki — recherche full-text dans les articles wiki publiés
@@ -214,7 +215,7 @@ export async function getWikiArticle(input: GetWikiArticleInput) {
     `**Auteurs** : ${(article.authors ?? []).join(", ")}`,
     `**Dernière révision** : ${new Date(article.last_substantive_revision_at).toLocaleDateString("fr-FR")} (${article.revision_count ?? 1} révision${(article.revision_count ?? 1) > 1 ? "s" : ""})`,
     article.wikidata_id ? `**Wikidata** : ${article.wikidata_id} (https://www.wikidata.org/wiki/${article.wikidata_id})` : null,
-    `**URL canonique** : https://lebonfoin.fr/wiki/${article.slug}`,
+    `**URL canonique** : ${lbfUrl(`/wiki/${article.slug}`, { tool: "get_wiki_article" })}`,
   ]
     .filter(Boolean)
     .join("\n");

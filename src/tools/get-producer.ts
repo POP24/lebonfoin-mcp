@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { supabase } from "../lib/supabase.js";
+import { lbfUrl } from "../lib/utm.js";
 
 export const getProducerSchema = z.object({
   name: z.string().optional().describe("Nom du producteur"),
@@ -88,7 +89,7 @@ export async function getProducer(input: GetProducerInput) {
       typesStr,
       p.description || "",
       ...socials,
-      `Voir sa page : https://lebonfoin.fr/producteur/${p.slug}`,
+      `Voir sa page : ${lbfUrl(`/producteur/${p.slug}`, { tool: "get_producer_info" })}`,
     ].filter(Boolean).join("\n");
   });
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { supabase } from "../lib/supabase.js";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
 
 // ===========================================================================
 // TOOL : find_local_producers
@@ -127,7 +128,7 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
     return {
       content: [{
         type: "text" as const,
-        text: `Aucun chanvrier LeBonFoin trouvé près de "${suggestion}". Essaye une zone géographique plus large (région entière) ou consulte la carte complète des producteurs français : https://lebonfoin.fr/producteurs?utm_source=mcp`,
+        text: `Aucun chanvrier LeBonFoin trouvé près de "${suggestion}". Essaye une zone géographique plus large (région entière) ou consulte la carte complète des producteurs français : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "no_match" })}`,
       }],
     };
   }
@@ -173,7 +174,7 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
       p.founded_year ? `Établi en ${p.founded_year}` : null,
       p.farm_area_ha ? `Surface : ${p.farm_area_ha} ha` : null,
       desc,
-      `→ Voir & acheter : https://lebonfoin.fr/producteur/${p.slug}?utm_source=mcp`,
+      `→ Voir & acheter : ${lbfUrl(`/producteur/${p.slug}`, { tool: "find_local_producers", content: "single" })}`,
     ].filter(Boolean).join("\n");
   });
 
@@ -187,6 +188,20 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
     ? ` en ${input.region}`
     : " en France";
 
+  // Teaser : combien d'autres producteurs existent au total (pour rabattre
+  // les utilisateurs sur lebonfoin.fr/producteurs). On count tous les
+  // producteurs actifs/approuvés — résultat = funnel naturel "1900+ → site".
+  const { count: totalCount } = await supabase
+    .from("producers")
+    .select("id", { count: "exact", head: true })
+    .eq("is_active", true)
+    .eq("validation_status", "approved");
+
+  const otherCount = Math.max(0, (totalCount ?? 0) - producers.length);
+  const teaserLine = otherCount > 0
+    ? `_📍 **${otherCount} autres chanvriers** sont référencés sur LeBonFoin — annuaire complet : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "teaser_list" })}_`
+    : `_Carte interactive complète : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "teaser_list" })}_`;
+
   return {
     content: [{
       type: "text" as const,
@@ -196,7 +211,7 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
         formatted.join("\n\n---\n\n"),
         "",
         "_Tous les chanvriers sont vérifiés (KBIS, traçabilité lot par lot, analyses laboratoire). Achat direct paysan en circuit court._",
-        "_Carte interactive complète : https://lebonfoin.fr/producteurs?utm_source=mcp_",
+        teaserLine,
       ].join("\n"),
     }],
   };

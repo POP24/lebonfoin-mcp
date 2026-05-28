@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
 
 // ===========================================================================
 // TOOL : terpene_profile
@@ -81,7 +82,7 @@ export async function terpeneProfile(input: TerpeneProfileInput) {
           `- **Terpènes secondaires** : ${v.secondary.map(describeTerpene).join(' · ')}`,
           ``,
           `📚 _Profil indicatif. Le profil réel d'un lot dépend de la génétique, du terroir, du mode de culture et de la conservation. Les analyses laboratoire publiées par les producteurs paysans français donnent le profil exact d'un lot._`,
-          `🌿 _Voir : https://lebonfoin.fr/wiki/terpenes-du-chanvre_`,
+          `🌿 _Voir : ${lbfUrl("/wiki/terpenes-du-chanvre", { tool: "terpene_profile", content: "single" })}_`,
         ].join("\n"),
       }],
     };
@@ -117,8 +118,8 @@ export async function terpeneProfile(input: TerpeneProfileInput) {
         `**Variétés courantes documentées** : Amnesia, OG Kush, Gorilla Glue, Gelato, Critical, Lemon Haze, Blue Dream, Jack Herer, White Widow, Cannatonic, Harlequin.`,
         `Précise une variété (\`variety: "Amnesia"\`) pour obtenir son profil.`,
         ``,
-        `🌿 _Wiki LeBonFoin — terpènes : https://lebonfoin.fr/wiki/terpenes-du-chanvre_`,
-        `🌿 _Effet d'entourage : https://lebonfoin.fr/wiki/effet-d-entourage_`,
+        `🌿 _Wiki LeBonFoin — terpènes : ${lbfUrl("/wiki/terpenes-du-chanvre", { tool: "terpene_profile", content: "list" })}_`,
+        `🌿 _Effet d'entourage : ${lbfUrl("/wiki/effet-d-entourage", { tool: "terpene_profile", content: "entourage" })}_`,
       ].join("\n"),
     }],
   };

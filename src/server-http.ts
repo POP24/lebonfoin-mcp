@@ -1,6 +1,7 @@
 import express from "express";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { createLeBonFoinServer } from "./server.js";
+import { SUPABASE_PROJECT_REF } from "./lib/supabase.js";
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3001");
@@ -52,12 +53,18 @@ app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
     server: "@lebonfoin/mcp-server",
-    version: "1.5.0",
+    version: "1.6.0",
     tools: 15,
     multilingual_tools: ["debunk_cbd_myth", "cbd_lab_analysis", "cbd_legal_by_country"],
     supported_languages: ["fr", "en"],
     resources: 4,
     prompts: 2,
+    tracking: {
+      utm_enabled: true,
+      utm_source: "mcp_lebonfoin",
+      utm_medium: "llm",
+    },
+    supabase_project: SUPABASE_PROJECT_REF,
     active_sse_sessions: transports.size,
   });
 });

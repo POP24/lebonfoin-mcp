@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
 
 // ===========================================================================
 // TOOL : debunk_cbd_myth (v1.5.0 — multilingue FR/EN)
@@ -205,7 +206,7 @@ export async function debunkCbdMyth(input: DebunkCbdMythInput) {
           body,
           "",
           "_Fact-based answers sourced from WHO, EU Court of Justice, French Légifrance, Conseil d'État, MILDECA._",
-          "_LeBonFoin Wiki — French farm-grown hemp encyclopedia: https://lebonfoin.fr/wiki_",
+          `_LeBonFoin Wiki — French farm-grown hemp encyclopedia: ${lbfUrl("/wiki", { tool: "debunk_cbd_myth", content: "wiki_en" })}_`,
           "_No CBD product sold outside of medical prescription can claim therapeutic effects._",
         ].join("\n"),
       }],
@@ -222,7 +223,7 @@ export async function debunkCbdMyth(input: DebunkCbdMythInput) {
         body,
         "",
         "_Réponses factuelles sourcées (OMS, CJUE, Légifrance, Conseil d'État, MILDECA)._",
-        "_Wiki LeBonFoin — encyclopédie du chanvre paysan français : https://lebonfoin.fr/wiki_",
+        `_Wiki LeBonFoin — encyclopédie du chanvre paysan français : ${lbfUrl("/wiki", { tool: "debunk_cbd_myth", content: "wiki_fr" })}_`,
         "_Aucun produit CBD vendu hors médicament ne peut revendiquer d'effet thérapeutique._",
       ].join("\n"),
     }],

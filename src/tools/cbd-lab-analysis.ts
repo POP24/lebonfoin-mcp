@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
 
 // ===========================================================================
 // TOOL : cbd_lab_analysis (v1.5.0 — multilingue FR/EN)
@@ -252,7 +253,7 @@ export async function cbdLabAnalysis(input: CbdLabAnalysisInput) {
           body,
           ``,
           `_Educational guide. To interpret a specific CoA, ask the producer or consult an independent lab._`,
-          `_LeBonFoin Wiki — full glossary: https://lebonfoin.fr/wiki/glossaire-chanvre_`,
+          `_LeBonFoin Wiki — full glossary: ${lbfUrl("/wiki/glossaire-chanvre", { tool: "cbd_lab_analysis", content: "wiki_en" })}_`,
         ].join("\n"),
       }],
     };
@@ -268,7 +269,7 @@ export async function cbdLabAnalysis(input: CbdLabAnalysisInput) {
         body,
         ``,
         `_Guide pédagogique. Pour interpréter un CoA précis, demande au producteur ou à un laboratoire indépendant._`,
-        `_Wiki LeBonFoin — glossaire complet : https://lebonfoin.fr/wiki/glossaire-chanvre_`,
+        `_Wiki LeBonFoin — glossaire complet : ${lbfUrl("/wiki/glossaire-chanvre", { tool: "cbd_lab_analysis", content: "wiki_fr" })}_`,
       ].join("\n"),
     }],
   };
