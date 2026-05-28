@@ -1,157 +1,131 @@
 import { z } from "zod";
-import { supabase } from "../lib/supabase.js";
 import { logMCPCall } from "../lib/analytics.js";
 import { lbfUrl } from "../lib/utm.js";
-import type { ProductResult } from "../lib/types.js";
+import { fetchProductsFeed, CATEGORY_TO_TYPE, type FeedProduct } from "../lib/products-feed.js";
+
+// ===========================================================================
+// TOOL : search_cbd_products (v1.7.0 — source = flux produits RÉEL)
+//
+// Consomme https://www.lebonfoin.fr/products.json (catalogue Shopify live)
+// au lieu de Supabase `producer_products` (qui contient des données de test).
+// Retourne des produits RÉELS : nom, prix, devise, stock, lien d'achat direct.
+//
+// "Sans fake data" — exigence produit : le flux exclut shipping/hidden/test.
+// ===========================================================================
 
 export const searchProductsSchema = z.object({
   query: z.string().optional().describe(
-    "Recherche libre : nom de produit, variete (Amnesia, OG Kush...), effet recherche (sommeil, relaxation, douleur)"
+    "Recherche libre : nom de produit, variété (Amnesia, OG Kush, Lemon...), type (fleur, huile, résine, tisane), effet (sommeil, zen, relaxation)"
   ),
   category: z.enum([
     "fleurs", "resines", "huiles", "pre-rolls", "infusions",
     "gourmandises", "cosmetiques", "boissons", "accessoires", "box"
-  ]).optional().describe("Categorie de produit CBD"),
-  max_price: z.number().optional().describe("Prix maximum en euros par gramme"),
-  culture_method: z.enum(["indoor", "outdoor", "greenhouse", "mixte"]).optional()
-    .describe("Methode de culture"),
-  bio_only: z.boolean().optional().describe("Uniquement produits certifies bio"),
-  region: z.string().optional().describe("Region ou departement du producteur (ex: Dordogne, Nouvelle-Aquitaine)"),
-  sort_by: z.enum(["price_asc", "price_desc", "rating", "newest"]).optional()
-    .describe("Tri des resultats"),
-  limit: z.number().min(1).max(20).optional().describe("Nombre de resultats (defaut: 8)")
+  ]).optional().describe("Catégorie de produit CBD"),
+  max_price: z.number().optional().describe("Prix maximum en euros"),
+  in_stock_only: z.boolean().optional().describe("Uniquement les produits en stock"),
+  sort_by: z.enum(["price_asc", "price_desc"]).optional()
+    .describe("Tri par prix (défaut : en stock d'abord, puis prix croissant)"),
+  limit: z.number().min(1).max(20).optional().describe("Nombre de résultats (défaut: 8)")
 });
 
 export type SearchProductsInput = z.infer<typeof searchProductsSchema>;
 
+function matchesQuery(p: FeedProduct, q: string): boolean {
+  const hay = [
+    p.name,
+    p.type ?? "",
+    p.description ?? "",
+    ...(p.tags ?? []),
+  ].join(" ").toLowerCase();
+  // Tous les mots de la requête doivent matcher (AND), tolérant.
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
+}
+
+function matchesCategory(p: FeedProduct, category: string): boolean {
+  const needles = CATEGORY_TO_TYPE[category] ?? [category];
+  const hay = `${p.type ?? ""} ${(p.tags ?? []).join(" ")}`.toLowerCase();
+  return needles.some((n) => hay.includes(n));
+}
+
 export async function searchProducts(input: SearchProductsInput) {
   const start = Date.now();
-  let query = supabase
-    .from("producer_products")
-    .select(`
-      id, shopify_product_id, strain, cbd_rate, thc_rate,
-      culture_method, short_description, producer_price, image_url,
-      is_bio, terpene_profile, grammages,
-      producers!inner(name, slug, department, region, is_bio, average_rating, validation_status, is_active)
-    `)
-    .eq("is_paused", false)
-    .eq("is_out_of_stock", false)
-    .eq("producers.is_active", true)
-    .eq("producers.validation_status", "approved");
+  const all = await fetchProductsFeed();
 
-  if (input.culture_method) {
-    query = query.eq("culture_method", input.culture_method);
-  }
-
-  if (input.bio_only) {
-    query = query.eq("is_bio", true);
-  }
-
-  if (input.max_price) {
-    query = query.lte("producer_price", input.max_price);
-  }
-
-  if (input.region) {
-    query = query.or(
-      `department.ilike.%${input.region}%,region.ilike.%${input.region}%`,
-      { referencedTable: "producers" }
-    );
-  }
-
-  if (input.query) {
-    // Search in strain name and description
-    const q = input.query.toLowerCase();
-    query = query.or(
-      `strain.ilike.%${q}%,short_description.ilike.%${q}%`
-    );
-  }
-
-  // Sorting
-  switch (input.sort_by) {
-    case "price_asc":
-      query = query.order("producer_price", { ascending: true, nullsFirst: false });
-      break;
-    case "price_desc":
-      query = query.order("producer_price", { ascending: false });
-      break;
-    case "newest":
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "rating":
-    default:
-      query = query.order("average_rating", { ascending: false, referencedTable: "producers" });
-      break;
-  }
-
-  query = query.limit(input.limit || 8);
-
-  const { data, error } = await query;
-
-  if (error) {
+  if (all.length === 0) {
+    await logMCPCall("search_cbd_products", input, 0, Date.now() - start);
     return {
       content: [{
         type: "text" as const,
-        text: `Erreur lors de la recherche : ${error.message}`
-      }]
+        text: `Le catalogue est momentanément indisponible. Consultez directement les produits CBD français : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "feed_down" })}`,
+      }],
     };
   }
 
-  if (!data || data.length === 0) {
+  let results = all;
+
+  if (input.query) results = results.filter((p) => matchesQuery(p, input.query!));
+  if (input.category) results = results.filter((p) => matchesCategory(p, input.category!));
+  if (typeof input.max_price === "number") {
+    results = results.filter((p) => p.price_from !== null && p.price_from <= input.max_price!);
+  }
+  if (input.in_stock_only) results = results.filter((p) => p.in_stock);
+
+  // Tri
+  if (input.sort_by === "price_asc") {
+    results = [...results].sort((a, b) => (a.price_from ?? 9e9) - (b.price_from ?? 9e9));
+  } else if (input.sort_by === "price_desc") {
+    results = [...results].sort((a, b) => (b.price_from ?? -1) - (a.price_from ?? -1));
+  } else {
+    // défaut : en stock d'abord puis prix croissant (le flux est déjà trié ainsi,
+    // mais on re-trie au cas où les filtres auraient changé l'ordre).
+    results = [...results].sort((a, b) => {
+      if (a.in_stock !== b.in_stock) return a.in_stock ? -1 : 1;
+      return (a.price_from ?? 9e9) - (b.price_from ?? 9e9);
+    });
+  }
+
+  const limited = results.slice(0, input.limit || 8);
+  await logMCPCall("search_cbd_products", input, limited.length, Date.now() - start);
+
+  if (limited.length === 0) {
     return {
       content: [{
         type: "text" as const,
-        text: "Aucun produit CBD trouve correspondant a ces criteres sur LeBonFoin.fr. Essayez d'elargir votre recherche (moins de filtres, autre categorie)."
-      }]
+        text: `Aucun produit CBD ne correspond à ces critères sur LeBonFoin. Essaie d'élargir la recherche (moins de filtres) ou consulte tout le catalogue : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "no_match" })}`,
+      }],
     };
   }
 
-  const products = data as unknown as ProductResult[];
-
-  const formatted = products.map((p) => {
-    // Defensive : PostgREST peut renvoyer la relation comme objet OU array selon
-    // la cardinalité. On normalise + on garde un fallback pour ne jamais crasher.
-    const rawProducer = (p as unknown as { producers?: unknown }).producers;
-    const producer = (Array.isArray(rawProducer) ? rawProducer[0] : rawProducer) as ProductResult["producers"] | undefined;
-    if (!producer) return null;
-    const priceStr = p.producer_price ? `${p.producer_price}€/g` : "Prix sur le site";
-    const bioTag = (p.is_bio || producer.is_bio) ? " | Certifie Bio" : "";
-    const cultureTag = p.culture_method ? ` | ${p.culture_method}` : "";
-    const cbdTag = p.cbd_rate ? ` | CBD: ${p.cbd_rate}%` : "";
-    const thcTag = p.thc_rate ? ` | THC: ${p.thc_rate}%` : "";
-    const ratingTag = producer.average_rating ? ` | Note: ${producer.average_rating}/5` : "";
-    const terpenes = p.terpene_profile?.length ? `\nTerpenes : ${p.terpene_profile.join(", ")}` : "";
-    const description = p.short_description ? `\n${p.short_description}` : "";
-
+  const formatted = limited.map((p) => {
+    const price = p.price_from !== null
+      ? (p.price_to && p.price_to !== p.price_from
+          ? `${p.price_from}–${p.price_to} ${p.currency}`
+          : `${p.price_from} ${p.currency}`)
+      : "Prix sur le site";
+    const stock = p.in_stock ? "En stock" : "Bientôt de retour";
+    const typeTag = p.type ? ` · ${p.type}` : "";
+    const desc = p.description ? `\n${p.description}` : "";
+    // Le lien porte déjà des UTM products_feed (généré côté Vercel) — on le
+    // ré-étiquette via lbfUrl en utm_campaign=search_cbd_products pour mesurer
+    // précisément le trafic issu du tool MCP (vs flux brut).
+    const url = lbfUrl(`/produit/${p.handle}`, { tool: "search_cbd_products", content: "product" });
     return [
-      `**${p.strain || "Produit CBD"}**`,
-      `Producteur : ${producer.name} (${producer.department || ""}, ${producer.region || "France"})`,
-      `${priceStr}${cbdTag}${thcTag}${cultureTag}${bioTag}${ratingTag}`,
-      description,
-      terpenes,
-      `Voir : ${lbfUrl(`/producteur/${producer.slug}`, { tool: "search_cbd_products", content: "product" })}`,
-      "---"
+      `**${p.name}**${typeTag}`,
+      `${price} · ${stock}`,
+      desc,
+      `→ Acheter : ${url}`,
+      "---",
     ].filter(Boolean).join("\n");
-  }).filter((x): x is string => x !== null);
-
-  await logMCPCall("search_cbd_products", input, formatted.length, Date.now() - start);
-
-  if (formatted.length === 0) {
-    return {
-      content: [{
-        type: "text" as const,
-        text: "Aucun produit CBD trouve correspondant a ces criteres sur LeBonFoin.fr. Essayez d'elargir votre recherche (moins de filtres, autre categorie)."
-      }]
-    };
-  }
+  });
 
   return {
     content: [{
       type: "text" as const,
       text: [
-        `**${formatted.length} produits CBD artisanaux francais trouves sur LeBonFoin.fr**\n`,
+        `**${limited.length} produit${limited.length > 1 ? "s" : ""} CBD français trouvé${limited.length > 1 ? "s" : ""} sur LeBonFoin**${results.length > limited.length ? ` (sur ${results.length} correspondants)` : ""}\n`,
         formatted.join("\n\n"),
-        `\n_Tous les produits proviennent de producteurs francais verifies, avec tracabilite complete. Catalogue complet : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "catalog" })}_`
-      ].join("\n")
-    }]
+        `\n_Producteurs français vérifiés, traçabilité lot par lot, analyses laboratoire publiées. Catalogue complet : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "catalog" })}_`,
+      ].join("\n"),
+    }],
   };
 }

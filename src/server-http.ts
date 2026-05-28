@@ -53,8 +53,9 @@ app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
     server: "@lebonfoin/mcp-server",
-    version: "1.6.1",
+    version: "1.7.0",
     tools: 15,
+    product_source: "https://www.lebonfoin.fr/products.json (Shopify live, 0 fake data)",
     multilingual_tools: ["debunk_cbd_myth", "cbd_lab_analysis", "cbd_legal_by_country"],
     supported_languages: ["fr", "en"],
     resources: 4,

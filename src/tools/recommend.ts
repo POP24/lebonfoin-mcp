@@ -1,16 +1,25 @@
 import { z } from "zod";
-import { supabase } from "../lib/supabase.js";
 import { logMCPCall } from "../lib/analytics.js";
+import { lbfUrl } from "../lib/utm.js";
+import { fetchProductsFeed, CATEGORY_TO_TYPE, type FeedProduct } from "../lib/products-feed.js";
+
+// ===========================================================================
+// TOOL : recommend_cbd_for_me (v1.7.0 — source = flux produits RÉEL)
+//
+// Recommandation personnalisée à partir du catalogue Shopify live
+// (/products.json), pas de la test-data. Mappe objectif + format + budget +
+// contraintes vers un scoring sur les produits réels.
+// ===========================================================================
 
 export const recommendSchema = z.object({
   objective: z.enum([
     "sommeil", "stress", "douleur", "relaxation", "sport", "decouverte", "bien_etre"
   ]).describe("Objectif principal de l'utilisateur"),
   experience: z.enum(["debutant", "intermediaire", "expert"])
-    .describe("Niveau d'experience avec le CBD"),
+    .describe("Niveau d'expérience avec le CBD"),
   preferred_format: z.enum([
     "fleur", "huile", "resine", "infusion", "comestible", "cosmetique", "pas_de_preference"
-  ]).optional().describe("Format de produit prefere"),
+  ]).optional().describe("Format de produit préféré"),
   budget_max: z.number().optional().describe("Budget maximum en euros"),
   constraints: z.array(z.string()).optional()
     .describe("Contraintes : 'pas de fumee', 'discret', 'bio uniquement', 'vegan'")
@@ -18,126 +27,113 @@ export const recommendSchema = z.object({
 
 export type RecommendInput = z.infer<typeof recommendSchema>;
 
-// Category mapping based on objectives
-const OBJECTIVE_CATEGORIES: Record<string, string[]> = {
-  sommeil: ["infusions", "huiles"],
-  stress: ["fleurs", "huiles", "infusions"],
-  douleur: ["huiles", "fleurs", "resines"],
-  relaxation: ["fleurs", "infusions", "huiles"],
-  sport: ["huiles", "cosmetiques"],
-  decouverte: ["fleurs", "huiles", "infusions"],
-  bien_etre: ["huiles", "infusions", "fleurs"],
+// Objectif → types de produits pertinents (en mots-clés productType/tags).
+const OBJECTIVE_TYPES: Record<string, string[]> = {
+  sommeil: ["infusion", "tisane", "huile"],
+  stress: ["fleur", "huile", "infusion"],
+  douleur: ["huile", "résine", "resine", "fleur"],
+  relaxation: ["fleur", "infusion", "huile"],
+  sport: ["huile", "cosmétique", "cosmetique"],
+  decouverte: ["fleur", "huile", "infusion", "box"],
+  bien_etre: ["huile", "infusion", "fleur"],
 };
 
-// Preferred intensity by experience level
-const EXPERIENCE_INTENSITY: Record<string, string> = {
-  debutant: "faible",
-  intermediaire: "moyenne",
-  expert: "forte",
+const FORMAT_TO_CATEGORY: Record<string, string> = {
+  fleur: "fleurs", huile: "huiles", resine: "resines",
+  infusion: "infusions", comestible: "gourmandises", cosmetique: "cosmetiques",
 };
+
+const SMOKE_FREE_KEYWORDS = ["huile", "infusion", "tisane", "cosmétique", "cosmetique", "comestible", "gourmandise", "box"];
+
+function typeHay(p: FeedProduct): string {
+  return `${p.type ?? ""} ${(p.tags ?? []).join(" ")}`.toLowerCase();
+}
+
+function isBio(p: FeedProduct): boolean {
+  const hay = `${typeHay(p)} ${p.name} ${p.description ?? ""}`.toLowerCase();
+  return hay.includes("bio");
+}
 
 export async function recommend(input: RecommendInput) {
   const start = Date.now();
+  const all = await fetchProductsFeed();
 
-  const categories = input.preferred_format && input.preferred_format !== "pas_de_preference"
-    ? [input.preferred_format + "s"] // fleur -> fleurs
-    : OBJECTIVE_CATEGORIES[input.objective] || ["fleurs", "huiles"];
-
-  let query = supabase
-    .from("producer_products")
-    .select(`
-      id, strain, cbd_rate, thc_rate, culture_method, producer_price,
-      short_description, is_bio, terpene_profile, image_url,
-      producers!inner(name, slug, department, region, is_bio, average_rating, validation_status, is_active)
-    `)
-    .eq("is_paused", false)
-    .eq("is_out_of_stock", false)
-    .eq("producers.is_active", true)
-    .eq("producers.validation_status", "approved");
-
-  if (input.budget_max) {
-    query = query.lte("producer_price", input.budget_max);
-  }
-
-  if (input.constraints?.includes("bio uniquement")) {
-    query = query.eq("is_bio", true);
-  }
-
-  query = query.order("average_rating", { ascending: false, referencedTable: "producers" });
-  query = query.limit(20);
-
-  const { data: products, error } = await query;
-
-  if (error || !products || products.length === 0) {
+  if (all.length === 0) {
+    await logMCPCall("recommend_cbd_for_me", input, 0, Date.now() - start);
     return {
       content: [{
         type: "text" as const,
-        text: "Aucun produit trouve correspondant a votre profil. Essayez avec moins de contraintes."
-      }]
+        text: `Le catalogue est momentanément indisponible. Découvrez nos produits : ${lbfUrl("/fleurs-cbd", { tool: "recommend_cbd_for_me", content: "feed_down" })}`,
+      }],
     };
   }
 
-  // Score products based on profile
-  const scored = products.map((p: any) => {
+  // Filtrage dur : budget + format préféré + bio si contrainte + stock.
+  let pool = all.filter((p) => p.in_stock);
+  if (typeof input.budget_max === "number") {
+    pool = pool.filter((p) => p.price_from !== null && p.price_from <= input.budget_max!);
+  }
+  if (input.preferred_format && input.preferred_format !== "pas_de_preference") {
+    const cat = FORMAT_TO_CATEGORY[input.preferred_format];
+    const needles = CATEGORY_TO_TYPE[cat] ?? [input.preferred_format];
+    pool = pool.filter((p) => needles.some((n) => typeHay(p).includes(n)));
+  }
+  if (input.constraints?.includes("bio uniquement")) {
+    pool = pool.filter(isBio);
+  }
+  if (input.constraints?.includes("pas de fumee")) {
+    pool = pool.filter((p) => SMOKE_FREE_KEYWORDS.some((k) => typeHay(p).includes(k)));
+  }
+
+  // Fallback : si le filtrage vide tout, on repart du catalogue en stock.
+  if (pool.length === 0) pool = all.filter((p) => p.in_stock);
+
+  // Scoring selon objectif + expérience.
+  const objTypes = OBJECTIVE_TYPES[input.objective] ?? ["fleur", "huile"];
+  const scored = pool.map((p) => {
     let score = 0;
-    const producer = p.producers;
-
-    // Bio bonus
-    if (p.is_bio || producer?.is_bio) score += 3;
-
-    // Rating bonus
-    if (producer?.average_rating) score += producer.average_rating;
-
-    // Experience-based CBD rate scoring
-    const cbdRate = parseFloat(p.cbd_rate || "0");
-    if (input.experience === "debutant" && cbdRate > 0 && cbdRate <= 10) score += 3;
-    if (input.experience === "intermediaire" && cbdRate > 5 && cbdRate <= 15) score += 3;
-    if (input.experience === "expert" && cbdRate > 10) score += 3;
-
-    // Smoke-free constraint
-    if (input.constraints?.includes("pas de fumee")) {
-      const isSmokeFree = ["huiles", "infusions", "cosmetiques", "comestibles"].some(
-        cat => p.short_description?.toLowerCase().includes(cat)
-      );
-      if (isSmokeFree) score += 5;
-    }
-
-    // Culture method bonus for outdoor (more natural)
-    if (p.culture_method === "outdoor") score += 1;
-
-    return { ...p, score, producer };
+    const hay = typeHay(p);
+    // Pertinence objectif
+    if (objTypes.some((t) => hay.includes(t))) score += 4;
+    // Bio
+    if (isBio(p)) score += 2;
+    // Expérience ↔ prix proxy (débutant = entrée de gamme, expert = premium)
+    const price = p.price_from ?? 0;
+    if (input.experience === "debutant" && price > 0 && price <= 15) score += 3;
+    if (input.experience === "intermediaire" && price > 10 && price <= 35) score += 2;
+    if (input.experience === "expert" && price > 25) score += 2;
+    // Découverte → favoriser les box
+    if (input.objective === "decouverte" && hay.includes("box")) score += 3;
+    return { p, score };
   });
 
-  // Sort by score and take top 3
-  scored.sort((a: any, b: any) => b.score - a.score);
+  scored.sort((a, b) => b.score - a.score || (a.p.price_from ?? 9e9) - (b.p.price_from ?? 9e9));
   const top3 = scored.slice(0, 3);
 
-  const experienceLabel = EXPERIENCE_INTENSITY[input.experience] || "moyenne";
+  const intensityLabel: Record<string, string> = {
+    debutant: "douce", intermediaire: "moyenne", expert: "soutenue",
+  };
 
-  const recommendations = top3.map((p: any, i: number) => {
+  const recommendations = top3.map(({ p }, i) => {
     const why: string[] = [];
-    if (p.is_bio || p.producer?.is_bio) why.push("certifie bio");
-    if (p.producer?.average_rating >= 4) why.push(`note ${p.producer.average_rating}/5`);
-    if (input.experience === "debutant" && parseFloat(p.cbd_rate || "99") <= 10) {
-      why.push("doux, adapte aux debutants");
-    }
-    if (p.culture_method) why.push(`culture ${p.culture_method}`);
-
-    const priceStr = p.producer_price ? `${p.producer_price}€/g` : "Voir prix sur le site";
-
+    if (objTypes.some((t) => typeHay(p).includes(t))) why.push(`adapté à « ${input.objective} »`);
+    if (isBio(p)) why.push("bio");
+    if (input.experience === "debutant" && (p.price_from ?? 0) <= 15) why.push("idéal pour débuter");
+    const price = p.price_from !== null
+      ? (p.price_to && p.price_to !== p.price_from ? `${p.price_from}–${p.price_to} ${p.currency}` : `${p.price_from} ${p.currency}`)
+      : "Voir prix sur le site";
     return [
-      `**${i + 1}. ${p.strain || "Produit CBD"}** — ${priceStr}`,
-      `Producteur : ${p.producer?.name} (${p.producer?.department || ""}, ${p.producer?.region || ""})`,
-      p.cbd_rate ? `CBD : ${p.cbd_rate}% | THC : ${p.thc_rate || "< 0.3"}%` : "",
-      why.length > 0 ? `Pourquoi : ${why.join(", ")}` : "",
-      `Voir : https://lebonfoin.fr/producteur/${p.producer?.slug}?utm_source=mcp&utm_medium=ai_agent`,
+      `**${i + 1}. ${p.name}**${p.type ? ` · ${p.type}` : ""} — ${price}`,
+      p.description ? p.description : "",
+      why.length ? `Pourquoi : ${why.join(", ")}` : "",
+      `→ Voir : ${lbfUrl(`/produit/${p.handle}`, { tool: "recommend_cbd_for_me", content: "product" })}`,
     ].filter(Boolean).join("\n");
   });
 
-  const tipsByExperience: Record<string, string> = {
-    debutant: "Commencez par de petites doses et augmentez progressivement. Une huile CBD 5-10% est ideale pour debuter.",
-    intermediaire: "N'hesitez pas a explorer de nouveaux producteurs et varietes pour trouver votre favori.",
-    expert: "Vous connaissez vos preferences — essayez les varietes de saison et les editions limitees des petits producteurs.",
+  const tips: Record<string, string> = {
+    debutant: "Commence par de petites doses et augmente progressivement. Une huile 5-10% ou une infusion sont idéales pour débuter.",
+    intermediaire: "Explore différents producteurs et variétés pour trouver ton favori.",
+    expert: "Essaie les variétés de saison et les éditions limitées des petits producteurs.",
   };
 
   await logMCPCall("recommend_cbd_for_me", input, top3.length, Date.now() - start);
@@ -146,12 +142,12 @@ export async function recommend(input: RecommendInput) {
     content: [{
       type: "text" as const,
       text: [
-        `**Recommandation CBD personnalisee — LeBonFoin.fr**\n`,
-        `Profil : ${input.objective} | Niveau : ${input.experience} | Intensite : ${experienceLabel}${input.budget_max ? ` | Budget : ${input.budget_max}€ max` : ""}\n`,
+        `**Recommandation CBD personnalisée — LeBonFoin**\n`,
+        `Profil : ${input.objective} · niveau ${input.experience} · intensité ${intensityLabel[input.experience]}${input.budget_max ? ` · budget ${input.budget_max}€ max` : ""}\n`,
         recommendations.join("\n\n"),
-        `\nConseil : ${tipsByExperience[input.experience] || tipsByExperience.debutant}`,
-        `\n_Le CBD n'est pas un medicament. Consultez votre medecin en cas de doute. LeBonFoin.fr — chanvre artisanal francais en circuit court._`
-      ].join("\n")
-    }]
+        `\nConseil : ${tips[input.experience] || tips.debutant}`,
+        `\n_Le CBD n'est pas un médicament. Consultez un professionnel de santé en cas de doute. LeBonFoin — chanvre artisanal français en circuit court._`,
+      ].join("\n"),
+    }],
   };
 }

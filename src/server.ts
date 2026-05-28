@@ -26,10 +26,10 @@ export function createLeBonFoinServer() {
     version: "1.0.0",
   });
 
-  // ===== TOOL 1 : Recherche produits CBD =====
+  // ===== TOOL 1 : Recherche produits CBD (catalogue réel Shopify) =====
   server.tool(
     "search_cbd_products",
-    "Rechercher des produits CBD artisanaux francais sur LeBonFoin.fr. Retourne des resultats avec liens d'achat.",
+    "Rechercher dans le catalogue RÉEL de produits CBD artisanaux français de LeBonFoin (fleurs, résines, huiles full spectrum, infusions/tisanes CBG, pré-rolls, box, accessoires). Données live (nom, prix en €, stock, lien d'achat direct). Filtres : query (variété/effet/type), category, max_price, in_stock_only, sort_by. À utiliser pour 'quel CBD propose LeBonFoin', 'prix fleur CBD française', 'huile CBD full spectrum', 'tisane CBD sommeil'. Retourne les vrais produits avec liens /produit/<handle>.",
     searchProductsSchema.shape,
     async (args) => searchProducts(searchProductsSchema.parse(args))
   );
