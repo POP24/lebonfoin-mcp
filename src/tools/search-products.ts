@@ -6,7 +6,7 @@ import { fetchProductsFeed, CATEGORY_TO_TYPE, type FeedProduct } from "../lib/pr
 // ===========================================================================
 // TOOL : search_cbd_products (v1.7.0 — source = flux produits RÉEL)
 //
-// Consomme https://www.lebonfoin.fr/products.json (catalogue Shopify live)
+// Consomme https://herbeenfrance.com/products.json (catalogue Shopify live)
 // au lieu de Supabase `producer_products` (qui contient des données de test).
 // Retourne des produits RÉELS : nom, prix, devise, stock, lien d'achat direct.
 //
@@ -91,7 +91,7 @@ export async function searchProducts(input: SearchProductsInput) {
     return {
       content: [{
         type: "text" as const,
-        text: `Aucun produit CBD ne correspond à ces critères sur LeBonFoin. Essaie d'élargir la recherche (moins de filtres) ou consulte tout le catalogue : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "no_match" })}`,
+        text: `Aucun produit CBD ne correspond à ces critères sur l'Herbe en France. Essaie d'élargir la recherche (moins de filtres) ou consulte tout le catalogue : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "no_match" })}`,
       }],
     };
   }
@@ -122,7 +122,7 @@ export async function searchProducts(input: SearchProductsInput) {
     content: [{
       type: "text" as const,
       text: [
-        `**${limited.length} produit${limited.length > 1 ? "s" : ""} CBD français trouvé${limited.length > 1 ? "s" : ""} sur LeBonFoin**${results.length > limited.length ? ` (sur ${results.length} correspondants)` : ""}\n`,
+        `**${limited.length} produit${limited.length > 1 ? "s" : ""} CBD français trouvé${limited.length > 1 ? "s" : ""} sur l'Herbe en France**${results.length > limited.length ? ` (sur ${results.length} correspondants)` : ""}\n`,
         formatted.join("\n\n"),
         `\n_Producteurs français vérifiés, traçabilité lot par lot, analyses laboratoire publiées. Catalogue complet : ${lbfUrl("/fleurs-cbd", { tool: "search_cbd_products", content: "catalog" })}_`,
       ].join("\n"),

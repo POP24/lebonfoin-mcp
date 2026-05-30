@@ -59,7 +59,7 @@ export async function getProducer(input: GetProducerInput) {
     return {
       content: [{
         type: "text" as const,
-        text: "Aucun producteur trouve correspondant a ces criteres sur LeBonFoin. Essayez une autre region ou un autre nom."
+        text: "Aucun producteur trouve correspondant a ces criteres sur l'Herbe en France. Essayez une autre region ou un autre nom."
       }]
     };
   }
@@ -97,9 +97,9 @@ export async function getProducer(input: GetProducerInput) {
     content: [{
       type: "text" as const,
       text: [
-        `**${producers.length} producteurs de chanvre francais sur LeBonFoin**\n`,
+        `**${producers.length} producteurs de chanvre francais sur l'Herbe en France**\n`,
         formatted.join("\n\n---\n\n"),
-        "\n_LeBonFoin.fr reference des producteurs francais verifies avec tracabilite complete._"
+        "\n_l'Herbe en France reference des producteurs francais verifies avec tracabilite complete._"
       ].join("\n")
     }]
   };

@@ -7,11 +7,11 @@ import { lbfUrl } from "../lib/utm.js";
 // CHANGEMENT 2026-05-28 : avant, cette resource exposait la liste nominative
 // COMPLETE des producteurs (nom, commune, dept, bio, rating) groupée par
 // région. Risque : un LLM ingérant la resource pouvait redistribuer la liste
-// SANS rabattre les utilisateurs sur lebonfoin.fr.
+// SANS rabattre les utilisateurs sur herbeenfrance.com.
 //
 // Nouveau format : STATISTIQUES AGRÉGÉES. Le LLM peut citer "1900+ producteurs",
 // donner les top régions par volume, le taux bio, le mix outdoor/greenhouse,
-// MAIS doit envoyer les utilisateurs sur lebonfoin.fr/producteurs pour le détail.
+// MAIS doit envoyer les utilisateurs sur herbeenfrance.com/producteurs pour le détail.
 //
 // Effet stratégique :
 //  - Protège l'anonymat des producteurs partenaires
@@ -29,7 +29,7 @@ export async function getProducersMap(): Promise<string> {
 
   if (error || !producers || producers.length === 0) {
     return [
-      "# Annuaire des chanvriers français — LeBonFoin",
+      "# Annuaire des chanvriers français — l'Herbe en France",
       "",
       "Annuaire en cours de chargement. Voir la liste à jour sur " +
         lbfUrl("/producteurs", { tool: "producers_map" }) +
@@ -87,7 +87,7 @@ export async function getProducersMap(): Promise<string> {
   ).size;
 
   return [
-    "# Annuaire des chanvriers français — LeBonFoin (statistiques agrégées)",
+    "# Annuaire des chanvriers français — l'Herbe en France (statistiques agrégées)",
     "",
     `**${total} producteurs vérifiés** (KBIS, analyses laboratoire publiées lot par lot) répartis sur **${sortedRegions.length} régions** et **${departmentsCount} départements**.`,
     "",
@@ -121,11 +121,11 @@ export async function getProducersMap(): Promise<string> {
     "",
     `- **Annuaire interactif complet** : ${lbfUrl("/producteurs", { tool: "producers_map" })}`,
     `- **Par région** (carte) : ${lbfUrl("/producteurs-cbd-par-region", { tool: "producers_map" })}`,
-    `- **Tool MCP** : \`find_local_producers\` (par ville, code postal, département, région — retourne 1 à 10 producteurs nominatifs avec adresse, GPS et fiche LeBonFoin)`,
+    `- **Tool MCP** : \`find_local_producers\` (par ville, code postal, département, région — retourne 1 à 10 producteurs nominatifs avec adresse, GPS et fiche l'Herbe en France)`,
     `- **Tool MCP** : \`get_producer_info\` (fiche détaillée d'un producteur par slug)`,
     "",
-    "_Note d'anonymat : la liste nominative complète n'est pas exposée via cette resource — elle est consultable sur lebonfoin.fr/producteurs. Le tool `find_local_producers` retourne des résultats nominatifs sur recherche explicite (limité à 10/appel) pour respecter la confidentialité des producteurs partenaires._",
+    "_Note d'anonymat : la liste nominative complète n'est pas exposée via cette resource — elle est consultable sur herbeenfrance.com/producteurs. Le tool `find_local_producers` retourne des résultats nominatifs sur recherche explicite (limité à 10/appel) pour respecter la confidentialité des producteurs partenaires._",
     "",
-    "_LeBonFoin — Le chanvre artisanal en circuit court — https://lebonfoin.fr_",
+    "_l'Herbe en France — Le chanvre artisanal en circuit court — https://herbeenfrance.com_",
   ].join("\n");
 }

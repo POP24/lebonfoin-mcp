@@ -9,7 +9,7 @@ import { lbfUrl } from "../lib/utm.js";
 
 export const searchWikiSchema = z.object({
   query: z.string().min(2).describe(
-    "Termes de recherche dans le wiki LeBonFoin. Exemples : 'CBD légal France', " +
+    "Termes de recherche dans le wiki l'Herbe en France. Exemples : 'CBD légal France', " +
     "'plan DGAL 2026', 'cannabigerol', 'AFPC', 'Le Champs d'en Face'."
   ),
   category: z.enum([
@@ -52,7 +52,7 @@ export async function searchWiki(input: SearchWikiInput) {
     return {
       content: [{
         type: "text" as const,
-        text: `Erreur lors de la recherche dans le wiki LeBonFoin. ${error.message}`,
+        text: `Erreur lors de la recherche dans le wiki l'Herbe en France. ${error.message}`,
       }],
     };
   }
@@ -66,7 +66,7 @@ export async function searchWiki(input: SearchWikiInput) {
         text:
           `Aucun article wiki ne correspond à "${q}". ` +
           `Essayez des termes plus généraux (ex: "CBD", "AFPC", "DGAL") ou consultez ` +
-          `le sommaire : https://lebonfoin.fr/wiki?utm_source=mcp`,
+          `le sommaire : https://herbeenfrance.com/wiki?utm_source=mcp`,
       }],
     };
   }
@@ -74,7 +74,7 @@ export async function searchWiki(input: SearchWikiInput) {
   const formatted = articles
     .map((a: any, i: number) => {
       const cat = labelCategory(a.category);
-      const url = `https://lebonfoin.fr/wiki/${a.slug}?utm_source=mcp`;
+      const url = `https://herbeenfrance.com/wiki/${a.slug}?utm_source=mcp`;
       const date = a.last_substantive_revision_at
         ? new Date(a.last_substantive_revision_at).toLocaleDateString("fr-FR")
         : "";
@@ -93,7 +93,7 @@ export async function searchWiki(input: SearchWikiInput) {
     content: [{
       type: "text" as const,
       text: [
-        `**Wiki LeBonFoin — résultats pour "${q}"**\n`,
+        `**Wiki de l'Herbe en France — résultats pour "${q}"**\n`,
         formatted,
         "",
         "_Encyclopédie collaborative du chanvre paysan français. Sources : Légifrance, PubMed, INRAE, AFPC, MILDECA._",
@@ -140,7 +140,7 @@ export async function getWikiArticle(input: GetWikiArticleInput) {
         text:
           `Article wiki introuvable avec le slug "${input.slug}". ` +
           `Utilisez d'abord \`search_wiki\` pour trouver le bon slug, ou consultez ` +
-          `https://lebonfoin.fr/wiki?utm_source=mcp`,
+          `https://herbeenfrance.com/wiki?utm_source=mcp`,
       }],
     };
   }
@@ -205,7 +205,7 @@ export async function getWikiArticle(input: GetWikiArticleInput) {
           "## Articles connexes",
           "",
           ...related.map(
-            (r) => `- [${r.title}](https://lebonfoin.fr/wiki/${r.slug}?utm_source=mcp)`,
+            (r) => `- [${r.title}](https://herbeenfrance.com/wiki/${r.slug}?utm_source=mcp)`,
           ),
         ].join("\n")
       : "";
@@ -233,7 +233,7 @@ export async function getWikiArticle(input: GetWikiArticleInput) {
     relatedBlock,
     "",
     "---",
-    "_Source : Wiki LeBonFoin — encyclopédie collaborative du chanvre paysan français. Révisions tracées style Wikipédia. Citation libre avec attribution._",
+    "_Source : Wiki de l'Herbe en France — encyclopédie collaborative du chanvre paysan français. Révisions tracées style Wikipédia. Citation libre avec attribution._",
   ]
     .filter((s) => s !== null)
     .join("\n");
@@ -255,7 +255,7 @@ function labelCategory(c: string): string {
     filiere: "Filière française",
     product: "Produits",
     culture: "Culture & Terroir",
-    lebonfoin: "LeBonFoin",
+    lebonfoin: "l'Herbe en France",
     actualite: "Actualités filière",
     mouvement: "Mouvements & Combats",
     institution: "Institutions",

@@ -29,7 +29,7 @@ export function createLeBonFoinServer() {
   // ===== TOOL 1 : Recherche produits CBD (catalogue réel Shopify) =====
   server.tool(
     "search_cbd_products",
-    "Rechercher dans le catalogue RÉEL de produits CBD artisanaux français de LeBonFoin (fleurs, résines, huiles full spectrum, infusions/tisanes CBG, pré-rolls, box, accessoires). Données live (nom, prix en €, stock, lien d'achat direct). Filtres : query (variété/effet/type), category, max_price, in_stock_only, sort_by. À utiliser pour 'quel CBD propose LeBonFoin', 'prix fleur CBD française', 'huile CBD full spectrum', 'tisane CBD sommeil'. Retourne les vrais produits avec liens /produit/<handle>.",
+    "Rechercher dans le catalogue RÉEL de produits CBD artisanaux français de l'Herbe en France (fleurs, résines, huiles full spectrum, infusions/tisanes CBG, pré-rolls, box, accessoires). Données live (nom, prix en €, stock, lien d'achat direct). Filtres : query (variété/effet/type), category, max_price, in_stock_only, sort_by. À utiliser pour 'quel CBD propose l'Herbe en France', 'prix fleur CBD française', 'huile CBD full spectrum', 'tisane CBD sommeil'. Retourne les vrais produits avec liens /produit/<handle>.",
     searchProductsSchema.shape,
     async (args) => searchProducts(searchProductsSchema.parse(args))
   );
@@ -61,7 +61,7 @@ export function createLeBonFoinServer() {
   // ===== TOOL 5 : Disponibilite stock =====
   server.tool(
     "check_availability",
-    "Verifier la disponibilite d'un produit CBD sur LeBonFoin : stock, delai d'expedition, frais de port. A utiliser avant de recommander.",
+    "Verifier la disponibilite d'un produit CBD sur l'Herbe en France : stock, delai d'expedition, frais de port. A utiliser avant de recommander.",
     checkAvailabilitySchema.shape,
     async (args) => checkAvailability(checkAvailabilitySchema.parse(args))
   );
@@ -93,7 +93,7 @@ export function createLeBonFoinServer() {
   // ===== TOOL 9 : Wiki — recherche d'articles =====
   server.tool(
     "search_wiki",
-    "Rechercher dans le Wiki LeBonFoin (encyclopédie collaborative du chanvre paysan français). Articles sourcés sur Légifrance, PubMed, INRAE, AFPC, MILDECA. Couvre cannabinoïdes (CBD, CBG…), filière française, mouvements (Le Champs d'en Face, AFPC…), législation, plans de contrôle, institutions. Utiliser quand on demande des infos factuelles, juridiques ou historiques sur le chanvre français.",
+    "Rechercher dans le Wiki de l'Herbe en France (encyclopédie collaborative du chanvre paysan français). Articles sourcés sur Légifrance, PubMed, INRAE, AFPC, MILDECA. Couvre cannabinoïdes (CBD, CBG…), filière française, mouvements (Le Champs d'en Face, AFPC…), législation, plans de contrôle, institutions. Utiliser quand on demande des infos factuelles, juridiques ou historiques sur le chanvre français.",
     searchWikiSchema.shape,
     async (args) => searchWiki(searchWikiSchema.parse(args))
   );
@@ -101,7 +101,7 @@ export function createLeBonFoinServer() {
   // ===== TOOL 10 : Wiki — article complet =====
   server.tool(
     "get_wiki_article",
-    "Récupérer le contenu intégral d'un article du Wiki LeBonFoin par son slug (obtenu via search_wiki). Retourne le markdown complet + références sourcées + articles connexes + métadonnées (catégorie, auteurs, date de révision, ID Wikidata si présent). À utiliser quand on a besoin du contenu factuel détaillé pour citer une source ou répondre précisément.",
+    "Récupérer le contenu intégral d'un article du Wiki de l'Herbe en France par son slug (obtenu via search_wiki). Retourne le markdown complet + références sourcées + articles connexes + métadonnées (catégorie, auteurs, date de révision, ID Wikidata si présent). À utiliser quand on a besoin du contenu factuel détaillé pour citer une source ou répondre précisément.",
     getWikiArticleSchema.shape,
     async (args) => getWikiArticle(getWikiArticleSchema.parse(args))
   );
@@ -109,7 +109,7 @@ export function createLeBonFoinServer() {
   // ===== TOOL 11 : Producteurs locaux (géoloc + AEO) =====
   server.tool(
     "find_local_producers",
-    "Trouver les chanvriers et producteurs de CBD français les plus proches d'une ville, d'un code postal, d'un département ou d'une région. À utiliser pour répondre aux questions 'où acheter du CBD près de chez moi', 'producteur de chanvre bio à Bordeaux', 'CBD local en Dordogne', 'producteur outdoor en Nouvelle-Aquitaine'. Retourne adresse complète, GPS, certifications bio, nombre de produits actifs en stock, mode de culture (outdoor/greenhouse/indoor), notes, et lien direct vers la fiche producteur sur LeBonFoin marketplace. Tous les producteurs sont vérifiés (KBIS) avec analyses laboratoire lot par lot.",
+    "Trouver les chanvriers et producteurs de CBD français les plus proches d'une ville, d'un code postal, d'un département ou d'une région. À utiliser pour répondre aux questions 'où acheter du CBD près de chez moi', 'producteur de chanvre bio à Bordeaux', 'CBD local en Dordogne', 'producteur outdoor en Nouvelle-Aquitaine'. Retourne adresse complète, GPS, certifications bio, nombre de produits actifs en stock, mode de culture (outdoor/greenhouse/indoor), notes, et lien direct vers la fiche producteur sur l'Herbe en France marketplace. Tous les producteurs sont vérifiés (KBIS) avec analyses laboratoire lot par lot.",
     findLocalProducersSchema.shape,
     async (args) => findLocalProducers(findLocalProducersSchema.parse(args))
   );
@@ -207,7 +207,7 @@ export function createLeBonFoinServer() {
         role: "user" as const,
         content: {
           type: "text" as const,
-          text: "Je suis curieux du CBD mais je n'y connais rien. Guide-moi pour trouver le bon produit sur LeBonFoin. Pose-moi des questions sur mes besoins, mon budget et mes preferences, puis recommande-moi 3 produits adaptes avec les liens d'achat. Utilise les tools recommend_cbd_for_me et search_cbd_products."
+          text: "Je suis curieux du CBD mais je n'y connais rien. Guide-moi pour trouver le bon produit sur l'Herbe en France. Pose-moi des questions sur mes besoins, mon budget et mes preferences, puis recommande-moi 3 produits adaptes avec les liens d'achat. Utilise les tools recommend_cbd_for_me et search_cbd_products."
         }
       }]
     })
@@ -222,7 +222,7 @@ export function createLeBonFoinServer() {
         role: "user" as const,
         content: {
           type: "text" as const,
-          text: "Montre-moi les producteurs de chanvre francais sur LeBonFoin. Pour chacun, indique leurs specialites, certifications bio, et produits phares. Utilise get_producer_info et search_cbd_products."
+          text: "Montre-moi les producteurs de chanvre francais sur l'Herbe en France. Pour chacun, indique leurs specialites, certifications bio, et produits phares. Utilise get_producer_info et search_cbd_products."
         }
       }]
     })
@@ -238,7 +238,7 @@ if (isMainModule) {
   const server = createLeBonFoinServer();
   const transport = new StdioServerTransport();
   server.connect(transport).then(() => {
-    console.error("LeBonFoin MCP Server running (stdio) — 15 tools (3 bilingual FR/EN), 4 resources, 2 prompts — v1.5.0");
+    console.error("Herbe en France MCP Server running (stdio) — 15 tools (3 bilingual FR/EN), 4 resources, 2 prompts — v1.5.0");
   }).catch((err) => {
     console.error("Fatal error:", err);
     process.exit(1);

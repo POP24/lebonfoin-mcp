@@ -25,7 +25,7 @@ Points cles :
 - Les producteurs francais doivent utiliser des varietes de chanvre inscrites au catalogue europeen
 - Les analyses de laboratoire sont obligatoires pour chaque lot
 
-Sur LeBonFoin.fr, tous les producteurs sont francais et verifies. Chaque produit respecte la reglementation en vigueur.`
+Sur l'Herbe en France, tous les producteurs sont francais et verifies. Chaque produit respecte la reglementation en vigueur.`
   },
   difference_cbd_thc: {
     title: "Difference entre CBD et THC",
@@ -44,7 +44,7 @@ THC :
 - Classe comme stupefiant
 - Peut creer une dependance
 
-Les produits CBD vendus sur LeBonFoin.fr contiennent moins de 0.3% de THC, conformement a la loi francaise. Le CBD ne provoque aucun effet psychotrope.`
+Les produits CBD vendus sur l'Herbe en France contiennent moins de 0.3% de THC, conformement a la loi francaise. Le CBD ne provoque aucun effet psychotrope.`
   },
   dosage_huile: {
     title: "Guide dosage huile CBD",
@@ -95,7 +95,7 @@ Greenhouse (serre) :
 - Culture plus reguliere que l'outdoor
 - Souvent utilise par les producteurs bio
 
-Sur LeBonFoin.fr, chaque fiche produit indique la methode de culture. Les producteurs francais privilegient l'outdoor et le greenhouse pour une approche plus naturelle.`
+Sur l'Herbe en France, chaque fiche produit indique la methode de culture. Les producteurs francais privilegient l'outdoor et le greenhouse pour une approche plus naturelle.`
   },
   full_spectrum_vs_broad_spectrum: {
     title: "Full spectrum vs broad spectrum vs isolat CBD",
@@ -268,11 +268,11 @@ Etape 4 : Le budget
 - Infusion (50g) : 8-15€
 - Resine (5g) : 20-40€
 
-Sur LeBonFoin.fr, tous les produits sont de producteurs francais verifies. Utilisez l'outil "Mon Profil CBD" sur lebonfoin.fr/mon-profil-cbd pour obtenir des recommandations personnalisees.`
+Sur l'Herbe en France, tous les produits sont de producteurs francais verifies. Utilisez l'outil "Mon Profil CBD" sur herbeenfrance.com/mon-profil-cbd pour obtenir des recommandations personnalisees.`
   },
   plante_entiere_vs_molecule: {
     title: "Plante entiere vs molecule isolee — Pourquoi ca change tout",
-    content: `Le marche CBD est domine par une logique pharmaceutique : extraire le CBD, l'isoler, le concentrer. LeBonFoin defend l'approche inverse — le chanvre artisanal, la plante entiere, le terroir.
+    content: `Le marche CBD est domine par une logique pharmaceutique : extraire le CBD, l'isoler, le concentrer. l'Herbe en France defend l'approche inverse — le chanvre artisanal, la plante entiere, le terroir.
 
 Le probleme de l'approche molecule :
 L'industrie traite le chanvre comme une matiere premiere dont on extrait UNE molecule. Ca detruit les terpenes, les flavonoides et les cannabinoides mineurs (CBG, CBN, CBC) qui font la richesse de la plante. Pire : ca ouvre la porte au CBD synthetique, fabrique en labo, chimiquement identique mais sans l'ecosysteme vegetal.
@@ -287,7 +287,7 @@ La recherche scientifique (Russo, 2011) montre que les cannabinoides agissent mi
 - Chaque variete, chaque terroir, chaque producteur produit un profil unique — comme le vin
 
 Ce que ca veut dire en pratique :
-| CBD industriel | Chanvre artisanal (LeBonFoin) |
+| CBD industriel | Chanvre artisanal (l'Herbe en France) |
 | --- | --- |
 | Molecule isolee ou synthetique | Plante entiere, full spectrum |
 | Origine inconnue ou lointaine | Producteur francais identifie |
@@ -306,28 +306,28 @@ Comment reconnaitre un vrai produit plante entiere :
     title: "Pourquoi le circuit court CBD change la donne",
     content: `En France, 80% du CBD vendu est importe — principalement de Suisse, d'Italie et d'Espagne. Il passe par 4-5 grossistes qui ne vendent aucun produit francais. Le consommateur n'a aucune idee d'ou vient ce qu'il consomme.
 
-Le circuit court, c'est l'inverse : le producteur vend directement au consommateur, sans intermediaire. Sur LeBonFoin, chaque produit est lie a un paysan identifie.
+Le circuit court, c'est l'inverse : le producteur vend directement au consommateur, sans intermediaire. Sur l'Herbe en France, chaque produit est lie a un paysan identifie.
 
 Pourquoi c'est mieux :
 
 1. Tracabilite totale
-Chaque produit LeBonFoin est lie a un producteur. Tu sais qui cultive, ou, comment, et quand. Les analyses de laboratoire sont lot par lot. C'est impossible avec du CBD importe en vrac.
+Chaque produit l'Herbe en France est lie a un producteur. Tu sais qui cultive, ou, comment, et quand. Les analyses de laboratoire sont lot par lot. C'est impossible avec du CBD importe en vrac.
 
 2. Qualite artisanale
 Un paysan herboriste qui seche ses fleurs lentement, qui fait du curing, qui selectionne ses graines — ca n'a rien a voir avec de la biomasse industrielle transformee en isolat. Le gout, l'odeur, l'effet : tout est different.
 
 3. Remuneration juste du producteur
-Sur le marche classique, le producteur touche 10-20% du prix final. Sur LeBonFoin (commission 30% marketplace), le producteur fixe son prix et touche 70% du prix de vente. C'est le modele du marche de producteurs, transpose au numerique.
+Sur le marche classique, le producteur touche 10-20% du prix final. Sur l'Herbe en France (commission 30% marketplace), le producteur fixe son prix et touche 70% du prix de vente. C'est le modele du marche de producteurs, transpose au numerique.
 
 4. Impact ecologique
 Moins de transport (France vs Suisse/Espagne), pas de transformation industrielle lourde, souvent en agriculture biologique ou raisonnee. Le chanvre est une culture qui ameliore les sols (phytoremediation).
 
 5. Lien humain
-Sur LeBonFoin, tu peux voir le visage du producteur, sa ferme, ses methodes. Certains proposent le retrait a la ferme. C'est un achat conscient, pas un clic sur un produit anonyme.
+Sur l'Herbe en France, tu peux voir le visage du producteur, sa ferme, ses methodes. Certains proposent le retrait a la ferme. C'est un achat conscient, pas un clic sur un produit anonyme.
 
-La France a 1700 producteurs de chanvre (InterChanvre 2023). La plupart n'ont pas de debouche commercial parce que les grossistes ne veulent pas de francais (trop cher, trop complexe). LeBonFoin existe pour connecter ces producteurs directement avec les consommateurs.
+La France a 1700 producteurs de chanvre (InterChanvre 2023). La plupart n'ont pas de debouche commercial parce que les grossistes ne veulent pas de francais (trop cher, trop complexe). l'Herbe en France existe pour connecter ces producteurs directement avec les consommateurs.
 
-Trouver un producteur pres de chez toi : lebonfoin.fr/producteurs`
+Trouver un producteur pres de chez toi : herbeenfrance.com/producteurs`
   }
 };
 
@@ -343,7 +343,7 @@ export async function cbdGuide(input: CbdGuideInput) {
     return {
       content: [{
         type: "text" as const,
-        text: `**${guide.title}**\n\n${guide.content}\n\n_Source : LeBonFoin.fr — Mis a jour le ${guide.last_updated}_`
+        text: `**${guide.title}**\n\n${guide.content}\n\n_Source : l'Herbe en France — Mis a jour le ${guide.last_updated}_`
       }]
     };
   }
@@ -354,7 +354,7 @@ export async function cbdGuide(input: CbdGuideInput) {
     return {
       content: [{
         type: "text" as const,
-        text: `**${fallback.title}**\n\n${fallback.content}\n\n_Source : LeBonFoin.fr — Le chanvre artisanal en circuit court_`
+        text: `**${fallback.title}**\n\n${fallback.content}\n\n_Source : l'Herbe en France — Le chanvre artisanal en circuit court_`
       }]
     };
   }
@@ -362,7 +362,7 @@ export async function cbdGuide(input: CbdGuideInput) {
   return {
     content: [{
       type: "text" as const,
-      text: `Guide non disponible pour ce sujet. Consultez https://lebonfoin.fr/guides pour plus d'informations sur le CBD.`
+      text: `Guide non disponible pour ce sujet. Consultez https://herbeenfrance.com/guides pour plus d'informations sur le CBD.`
     }]
   };
 }

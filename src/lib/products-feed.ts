@@ -1,8 +1,8 @@
 // ===========================================================================
-// Client du flux produits public LeBonFoin (/products.json).
+// Client du flux produits public l'Herbe en France (/products.json).
 //
 // Source de vérité commerciale = Shopify, exposé via le flux Vercel
-// https://www.lebonfoin.fr/products.json (catalogue RÉEL, 0 fake data).
+// https://herbeenfrance.com/products.json (catalogue RÉEL, 0 fake data).
 //
 // Le MCP consomme ce flux plutôt que de taper Supabase `producer_products`
 // (qui contient des données de test `test-nico-*`) ou de dupliquer un token
@@ -32,7 +32,7 @@ interface FeedResponse {
 }
 
 const FEED_URL =
-  process.env.PRODUCTS_FEED_URL || "https://www.lebonfoin.fr/products.json";
+  process.env.PRODUCTS_FEED_URL || "https://herbeenfrance.com/products.json";
 
 // Cache mémoire process (le flux est déjà caché 10 min côté CDN Vercel —
 // ce cache évite juste de refetch à chaque tool call dans une même session).

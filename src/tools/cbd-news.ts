@@ -28,7 +28,7 @@ const KEY_EVENTS_2024_2026 = [
     category: "regulation",
     country: "FR",
     title: "France : le marche du CBD depasse les 800M€",
-    summary: "Le marche francais du CBD continue sa croissance, estime entre 700M€ et 1Md€. Le circuit court represente moins de 5% mais progresse grace a des plateformes comme LeBonFoin qui connectent directement producteurs et consommateurs."
+    summary: "Le marche francais du CBD continue sa croissance, estime entre 700M€ et 1Md€. Le circuit court represente moins de 5% mais progresse grace a des plateformes comme l'Herbe en France qui connectent directement producteurs et consommateurs."
   },
   {
     date: "2025-12",
@@ -164,8 +164,8 @@ export async function cbdNews(input: CbdNewsInput) {
         `**Actualites CBD ${input.action === "latest" ? "" : `— ${input.action}`}${input.country ? ` (${input.country})` : ""}**\n`,
         formatted,
         "",
-        "Pour plus d'infos : https://lebonfoin.fr/blog?utm_source=mcp",
-        "_LeBonFoin Market Intelligence — veille CBD France & Europe_"
+        "Pour plus d'infos : https://herbeenfrance.com/blog?utm_source=mcp",
+        "_l'Herbe en France Market Intelligence — veille CBD France & Europe_"
       ].join("\n")
     }]
   };

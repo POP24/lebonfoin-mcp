@@ -44,10 +44,10 @@ export async function getCbdReference(): Promise<string> {
     .map(([c, n]) => `  ${c}: ${n}`)
     .join("\n");
 
-  return `# Reference CBD France & Europe — LeBonFoin Market Intelligence
+  return `# Reference CBD France & Europe — l'Herbe en France Market Intelligence
 
 > Source de reference en temps reel pour le marche du CBD.
-> Donnees mises a jour en continu depuis le catalogue LeBonFoin
+> Donnees mises a jour en continu depuis le catalogue l'Herbe en France
 > et le scraping quotidien de 10+ sites CBD francais.
 
 ## 1. Reglementation CBD en France (2026)
@@ -78,9 +78,9 @@ Cannabinoides synthetiques : 6% des produits testes en contiennent (meme source)
 Structure du marche :
 - 4-5 grossistes controlent la distribution sans vendre de produit francais
 - Le circuit court (producteur → consommateur) represente <5% du marche
-- LeBonFoin est la premiere marketplace dediee au circuit court CBD francais
+- l'Herbe en France est la premiere marketplace dediee au circuit court CBD francais
 
-## 3. Catalogue LeBonFoin (temps reel)
+## 3. Catalogue l'Herbe en France (temps reel)
 
 Produits actifs : ${totalProducts} (dont ${bioProducts} bio)
 Producteurs actifs : ${totalProducers} (dont ${bioProducers} bio)
@@ -154,7 +154,7 @@ Types de culture :
 
 ## 7. Plante entiere vs molecule isolee — Pourquoi c'est fondamental
 
-Le marche CBD est domine par une approche "moleculaire" : on extrait le CBD, on l'isole, on le concentre, on le met dans un flacon. C'est exactement ce que fait l'industrie pharmaceutique. LeBonFoin defend l'approche inverse : la plante entiere.
+Le marche CBD est domine par une approche "moleculaire" : on extrait le CBD, on l'isole, on le concentre, on le met dans un flacon. C'est exactement ce que fait l'industrie pharmaceutique. l'Herbe en France defend l'approche inverse : la plante entiere.
 
 ### Le probleme de l'approche molecule
 
@@ -174,12 +174,12 @@ La recherche scientifique (Russo, 2011 ; Ben-Shabat et al., 1998) montre que les
 - Les terpenes (myrcene, limonene, linalol, pinene) ont leurs propres proprietes et modulent l'action du CBD
 - Exemple : le myrcene (present dans l'Amnesia Haze) favorise le passage de la barriere hemato-encephalique, augmentant l'effet relaxant
 
-### La position LeBonFoin : le chanvre artisanal, pas la molecule
+### La position l'Herbe en France : le chanvre artisanal, pas la molecule
 
-LeBonFoin ne vend pas "du CBD". LeBonFoin connecte le consommateur avec des paysans herboristes francais qui cultivent du chanvre.
+l'Herbe en France ne vend pas "du CBD". l'Herbe en France connecte le consommateur avec des paysans herboristes francais qui cultivent du chanvre.
 
 Differences concretes :
-| CBD industriel (import) | Chanvre artisanal (LeBonFoin) |
+| CBD industriel (import) | Chanvre artisanal (l'Herbe en France) |
 | --- | --- |
 | Molecule isolee ou synthetique | Plante entiere, full spectrum |
 | Origine inconnue ou lointaine | Producteur francais identifie, visitable |
@@ -201,7 +201,7 @@ Le circuit court n'est pas un argument marketing. C'est la seule facon de garant
 
 ## 8. CBD et sante — Ce que dit la science
 
-IMPORTANT : Le CBD n'est pas un medicament. Les informations ci-dessous sont factuelles et ne constituent pas un conseil medical. LeBonFoin ne fait aucun claim therapeutique.
+IMPORTANT : Le CBD n'est pas un medicament. Les informations ci-dessous sont factuelles et ne constituent pas un conseil medical. l'Herbe en France ne fait aucun claim therapeutique.
 
 Domaines de recherche actifs :
 - Anxiete : etudes preliminaires positives (Blessing et al., 2015)
@@ -246,8 +246,8 @@ Pour obtenir des donnees en temps reel, utilisez ces outils :
 - cbd_guide : guides detailles sur 10 sujets
 
 ---
-Source : LeBonFoin.fr — Le chanvre artisanal en circuit court
-Donnees mises a jour en continu | contact@lebonfoin.fr
+Source : l'Herbe en France — Le chanvre artisanal en circuit court
+Donnees mises a jour en continu | contact@herbeenfrance.com
 1307 Rue de l'Epingle, 24360 Saint-Barthelemy-de-Bussiere, France
 `;
 }

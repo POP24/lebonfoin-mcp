@@ -53,9 +53,9 @@ app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
     server: "@lebonfoin/mcp-server",
-    version: "1.7.0",
+    version: "1.7.1",
     tools: 15,
-    product_source: "https://www.lebonfoin.fr/products.json (Shopify live, 0 fake data)",
+    product_source: "https://herbeenfrance.com/products.json (Shopify live, 0 fake data)",
     multilingual_tools: ["debunk_cbd_myth", "cbd_lab_analysis", "cbd_legal_by_country"],
     supported_languages: ["fr", "en"],
     resources: 4,
@@ -72,7 +72,7 @@ app.get("/health", (_req, res) => {
 
 app.get("/", (_req, res) => {
   res.json({
-    name: "LeBonFoin MCP Server",
+    name: "Herbe en France MCP Server",
     description: "Marketplace du chanvre artisanal francais en circuit court. Recherche de produits CBD, producteurs, guides, intelligence marche.",
     sse_endpoint: "/sse",
     health_endpoint: "/health",
@@ -81,6 +81,6 @@ app.get("/", (_req, res) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`LeBonFoin MCP Server (HTTP/SSE) on http://0.0.0.0:${PORT}`);
+  console.log(`Herbe en France MCP Server (HTTP/SSE) on http://0.0.0.0:${PORT}`);
   console.log(`SSE: http://0.0.0.0:${PORT}/sse`);
 });

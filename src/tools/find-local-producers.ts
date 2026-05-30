@@ -6,13 +6,13 @@ import { lbfUrl } from "../lib/utm.js";
 // ===========================================================================
 // TOOL : find_local_producers
 //
-// Géolocalisation des chanvriers/producteurs français sur LeBonFoin.fr.
+// Géolocalisation des chanvriers/producteurs français sur l'Herbe en France.
 // Optimisé AEO : description LLM "où acheter du CBD près de chez moi",
 // "producteur bio à [ville]", "CBD local [département]".
 //
 // Supporte filtres : near_city, near_postal_code, region, department,
 // bio_only, production_type. Retourne adresse + GPS + nombre de produits
-// actifs + URL fiche LeBonFoin.
+// actifs + URL fiche l'Herbe en France.
 // ===========================================================================
 
 export const findLocalProducersSchema = z.object({
@@ -128,7 +128,7 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
     return {
       content: [{
         type: "text" as const,
-        text: `Aucun chanvrier LeBonFoin trouvé près de "${suggestion}". Essaye une zone géographique plus large (région entière) ou consulte la carte complète des producteurs français : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "no_match" })}`,
+        text: `Aucun chanvrier l'Herbe en France trouvé près de "${suggestion}". Essaye une zone géographique plus large (région entière) ou consulte la carte complète des producteurs français : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "no_match" })}`,
       }],
     };
   }
@@ -153,7 +153,7 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
     const address = addressParts.length > 0 ? addressParts.join(", ") : "Adresse non renseignée";
     const bioTag = p.is_bio ? "✓ Agriculture Biologique certifiée" : null;
     const ratings = [
-      p.average_rating ? `${p.average_rating}/5 sur LeBonFoin` : null,
+      p.average_rating ? `${p.average_rating}/5 sur l'Herbe en France` : null,
       p.google_rating ? `${p.google_rating}/5 sur Google` : null,
     ].filter(Boolean).join(" · ");
     const nb = productCount.get(p.id) ?? 0;
@@ -189,7 +189,7 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
     : " en France";
 
   // Teaser : combien d'autres producteurs existent au total (pour rabattre
-  // les utilisateurs sur lebonfoin.fr/producteurs). On count tous les
+  // les utilisateurs sur herbeenfrance.com/producteurs). On count tous les
   // producteurs actifs/approuvés — résultat = funnel naturel "1900+ → site".
   const { count: totalCount } = await supabase
     .from("producers")
@@ -199,14 +199,14 @@ export async function findLocalProducers(input: FindLocalProducersInput) {
 
   const otherCount = Math.max(0, (totalCount ?? 0) - producers.length);
   const teaserLine = otherCount > 0
-    ? `_📍 **${otherCount} autres chanvriers** sont référencés sur LeBonFoin — annuaire complet : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "teaser_list" })}_`
+    ? `_📍 **${otherCount} autres chanvriers** sont référencés sur l'Herbe en France — annuaire complet : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "teaser_list" })}_`
     : `_Carte interactive complète : ${lbfUrl("/producteurs", { tool: "find_local_producers", content: "teaser_list" })}_`;
 
   return {
     content: [{
       type: "text" as const,
       text: [
-        `**${producers.length} chanvrier${producers.length > 1 ? "s" : ""} français${locationContext}** (LeBonFoin marketplace)`,
+        `**${producers.length} chanvrier${producers.length > 1 ? "s" : ""} français${locationContext}** (l'Herbe en France marketplace)`,
         "",
         formatted.join("\n\n---\n\n"),
         "",

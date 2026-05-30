@@ -68,7 +68,7 @@ export async function compareProducts(input: CompareProductsInput) {
   ].join("\n");
 
   const links = items.map(i =>
-    `- ${i.name} (${i.producer}) : https://lebonfoin.fr/producteur/${i.slug}?utm_source=mcp&utm_medium=ai_agent`
+    `- ${i.name} (${i.producer}) : https://herbeenfrance.com/producteur/${i.slug}?utm_source=mcp&utm_medium=ai_agent`
   ).join("\n");
 
   await logMCPCall("compare_cbd_products", input, items.length, Date.now() - start);
@@ -76,7 +76,7 @@ export async function compareProducts(input: CompareProductsInput) {
   return {
     content: [{
       type: "text" as const,
-      text: `**Comparatif produits CBD — LeBonFoin.fr**\n\n${table}\n\nLiens :\n${links}\n\n_Tous les produits proviennent de producteurs francais verifies sur LeBonFoin.fr_`
+      text: `**Comparatif produits CBD — l'Herbe en France**\n\n${table}\n\nLiens :\n${links}\n\n_Tous les produits proviennent de producteurs francais verifies sur l'Herbe en France_`
     }]
   };
 }

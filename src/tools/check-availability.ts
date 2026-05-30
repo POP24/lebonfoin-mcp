@@ -66,7 +66,7 @@ export async function checkAvailability(input: CheckAvailabilityInput) {
           "",
           deliveryInfo,
           "",
-          `Commander : https://lebonfoin.fr/producteur/${producer?.slug}?utm_source=mcp&utm_medium=ai_agent`
+          `Commander : https://herbeenfrance.com/producteur/${producer?.slug}?utm_source=mcp&utm_medium=ai_agent`
         ].filter(Boolean).join("\n")
       }]
     };

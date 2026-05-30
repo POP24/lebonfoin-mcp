@@ -361,7 +361,7 @@ export async function cbdLegalByCountry(input: CbdLegalByCountryInput) {
           ``,
           `_Indicative status at time of writing. Legislation evolves — check the official source for any legal or commercial decision._`,
           `_No therapeutic claims. CBD sold outside of prescription is not a treatment._`,
-          `_LeBonFoin Wiki — French farm-grown hemp encyclopedia: ${lbfUrl("/wiki", { tool: "cbd_legal_by_country", content: "wiki_en" })}_`,
+          `_l'Herbe en France Wiki — French farm-grown hemp encyclopedia: ${lbfUrl("/wiki", { tool: "cbd_legal_by_country", content: "wiki_en" })}_`,
         ].join("\n"),
       }],
     };
@@ -378,7 +378,7 @@ export async function cbdLegalByCountry(input: CbdLegalByCountryInput) {
         ``,
         `_Statut indicatif au moment de la rédaction. La législation évolue — vérifier la source officielle pour toute décision juridique ou commerciale._`,
         `_Aucune allégation thérapeutique. Le CBD vendu hors médicament n'est pas un traitement._`,
-        `_Wiki LeBonFoin — encyclopédie du chanvre paysan français : ${lbfUrl("/wiki", { tool: "cbd_legal_by_country", content: "wiki_fr" })}_`,
+        `_Wiki de l'Herbe en France — encyclopédie du chanvre paysan français : ${lbfUrl("/wiki", { tool: "cbd_legal_by_country", content: "wiki_fr" })}_`,
       ].join("\n"),
     }],
   };

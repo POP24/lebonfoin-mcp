@@ -122,7 +122,7 @@ Les **terpènes** sont les composés aromatiques responsables des odeurs et save
 - **Bêta-caryophyllène** (poivré) — épicé.
 - **Linalol** (floral) — lavande.
 
-Un profil terpénique exprimé en pourcentage ou en mg/g indique la **richesse aromatique** du lot. C'est un marqueur de qualité, et un élément clé de l'[effet d'entourage](https://lebonfoin.fr/wiki/effet-d-entourage).`,
+Un profil terpénique exprimé en pourcentage ou en mg/g indique la **richesse aromatique** du lot. C'est un marqueur de qualité, et un élément clé de l'[effet d'entourage](https://herbeenfrance.com/wiki/effet-d-entourage).`,
     body_en: `## Terpene profile
 
 **Terpenes** are the aromatic compounds responsible for smell and flavor. A good CoA reports the main ones:
@@ -133,7 +133,7 @@ Un profil terpénique exprimé en pourcentage ou en mg/g indique la **richesse a
 - **Beta-caryophyllene** (peppery) — spicy.
 - **Linalool** (floral) — lavender.
 
-A terpene profile expressed in percentage or mg/g indicates the **aromatic richness** of the batch. It is a quality marker and a key element of the [entourage effect](https://lebonfoin.fr/wiki/effet-d-entourage).`,
+A terpene profile expressed in percentage or mg/g indicates the **aromatic richness** of the batch. It is a quality marker and a key element of the [entourage effect](https://herbeenfrance.com/wiki/effet-d-entourage).`,
   },
   {
     topic: "pesticides",
@@ -193,7 +193,7 @@ Critères de fiabilité d'une analyse :
 
 Méfie-toi d'un CoA flou, sans date, sans laboratoire identifié, ou identique sur plusieurs lots différents.
 
-Sur LeBonFoin, les producteurs paysans publient leurs **analyses lot par lot** — c'est le standard de transparence revendiqué par la filière française.`,
+Sur l'Herbe en France, les producteurs paysans publient leurs **analyses lot par lot** — c'est le standard de transparence revendiqué par la filière française.`,
     body_en: `## How to verify that a CoA is reliable
 
 Reliability criteria for an analysis:
@@ -207,7 +207,7 @@ Reliability criteria for an analysis:
 
 Beware of a vague CoA, undated, without identified laboratory, or identical across different batches.
 
-On LeBonFoin, artisanal producers publish their **batch-by-batch analyses** — the transparency standard claimed by the French hemp industry.`,
+On l'Herbe en France, artisanal producers publish their **batch-by-batch analyses** — the transparency standard claimed by the French hemp industry.`,
   },
 ];
 
@@ -253,7 +253,7 @@ export async function cbdLabAnalysis(input: CbdLabAnalysisInput) {
           body,
           ``,
           `_Educational guide. To interpret a specific CoA, ask the producer or consult an independent lab._`,
-          `_LeBonFoin Wiki — full glossary: ${lbfUrl("/wiki/glossaire-chanvre", { tool: "cbd_lab_analysis", content: "wiki_en" })}_`,
+          `_l'Herbe en France Wiki — full glossary: ${lbfUrl("/wiki/glossaire-chanvre", { tool: "cbd_lab_analysis", content: "wiki_en" })}_`,
         ].join("\n"),
       }],
     };
@@ -269,7 +269,7 @@ export async function cbdLabAnalysis(input: CbdLabAnalysisInput) {
         body,
         ``,
         `_Guide pédagogique. Pour interpréter un CoA précis, demande au producteur ou à un laboratoire indépendant._`,
-        `_Wiki LeBonFoin — glossaire complet : ${lbfUrl("/wiki/glossaire-chanvre", { tool: "cbd_lab_analysis", content: "wiki_fr" })}_`,
+        `_Wiki de l'Herbe en France — glossaire complet : ${lbfUrl("/wiki/glossaire-chanvre", { tool: "cbd_lab_analysis", content: "wiki_fr" })}_`,
       ].join("\n"),
     }],
   };

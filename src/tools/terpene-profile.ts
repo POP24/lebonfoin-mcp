@@ -118,7 +118,7 @@ export async function terpeneProfile(input: TerpeneProfileInput) {
         `**Variétés courantes documentées** : Amnesia, OG Kush, Gorilla Glue, Gelato, Critical, Lemon Haze, Blue Dream, Jack Herer, White Widow, Cannatonic, Harlequin.`,
         `Précise une variété (\`variety: "Amnesia"\`) pour obtenir son profil.`,
         ``,
-        `🌿 _Wiki LeBonFoin — terpènes : ${lbfUrl("/wiki/terpenes-du-chanvre", { tool: "terpene_profile", content: "list" })}_`,
+        `🌿 _Wiki de l'Herbe en France — terpènes : ${lbfUrl("/wiki/terpenes-du-chanvre", { tool: "terpene_profile", content: "list" })}_`,
         `🌿 _Effet d'entourage : ${lbfUrl("/wiki/effet-d-entourage", { tool: "terpene_profile", content: "entourage" })}_`,
       ].join("\n"),
     }],

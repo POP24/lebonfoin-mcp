@@ -13,7 +13,7 @@ export const marketDataSchema = z.object({
     "eu_market_compare"
   ]).describe(
     "variety_price: prix d'une variete | price_ranking: classement par prix | " +
-    "price_check: verifier si un prix est bon | best_deals: meilleures offres LeBonFoin | " +
+    "price_check: verifier si un prix est bon | best_deals: meilleures offres l'Herbe en France | " +
     "market_overview: vue d'ensemble | eu_regulation: reglementation CBD par pays europeen | " +
     "eu_market_compare: comparaison des marches CBD europeens"
   ),
@@ -46,7 +46,7 @@ const EU_MARKETS: Record<string, {
     market_size_est: "700M-1Md€ (2025)",
     avg_price_range: "4-12€/g",
     notes: "80% du CBD vendu est importe. ~1700 producteurs de chanvre (InterChanvre 2023). 8 produits sur 10 mal etiquetes (MILDECA/60M Consommateurs 2023).",
-    key_players: "CBD.fr, Stormrock, Golden CBD, La Ferme du CBD, Mama Kana, LeBonFoin (circuit court)"
+    key_players: "CBD.fr, Stormrock, Golden CBD, La Ferme du CBD, Mama Kana, l'Herbe en France (circuit court)"
   },
   CH: {
     name: "Suisse",
@@ -198,8 +198,8 @@ export async function marketData(input: MarketDataInput) {
             `| CBD moyen | ${d.avg_cbd_pct || "N/A"}% |`,
             `| Listings 30j | ${d.total_listings_30d} |`,
             "",
-            `Dashboard : https://lebonfoin.fr/marche-cbd?v=${input.variety}&utm_source=mcp`,
-            "_LeBonFoin Market Intelligence — scraping quotidien 10+ sites_"
+            `Dashboard : https://herbeenfrance.com/marche-cbd?v=${input.variety}&utm_source=mcp`,
+            "_l'Herbe en France Market Intelligence — scraping quotidien 10+ sites_"
           ].join("\n")
         }]
       };
@@ -228,7 +228,7 @@ export async function marketData(input: MarketDataInput) {
       return {
         content: [{
           type: "text" as const,
-          text: `**Classement fleurs CBD France par prix**\n\n${headers}\n${sep}\n${rows}\n\nhttps://lebonfoin.fr/marche-cbd?utm_source=mcp\n_LeBonFoin Market Intelligence_`
+          text: `**Classement fleurs CBD France par prix**\n\n${headers}\n${sep}\n${rows}\n\nhttps://herbeenfrance.com/marche-cbd?utm_source=mcp\n_l'Herbe en France Market Intelligence_`
         }]
       };
     }
@@ -280,14 +280,14 @@ export async function marketData(input: MarketDataInput) {
             `| Max marche | ${d.current_max_price}€/g |`,
             `| Ecart vs moyenne | ${diffNum > 0 ? "+" : ""}${diffPct}% |`,
             "",
-            `Offres LeBonFoin : https://lebonfoin.fr/fleurs-cbd?utm_source=mcp`,
-            "_LeBonFoin Market Intelligence_"
+            `Offres l'Herbe en France : https://herbeenfrance.com/fleurs-cbd?utm_source=mcp`,
+            "_l'Herbe en France Market Intelligence_"
           ].join("\n")
         }]
       };
     }
 
-    // ---- Best deals LeBonFoin vs marche ----
+    // ---- Best deals l'Herbe en France vs marche ----
     case "best_deals": {
       const { data } = await supabase
         .from("lebonfoin_market_position")
@@ -302,7 +302,7 @@ export async function marketData(input: MarketDataInput) {
         return { content: [{ type: "text" as const, text: "Donnees comparatives en cours de collecte. Les premiers resultats seront disponibles apres 1 semaine de scraping." }] };
       }
 
-      const headers = "| Variete | LeBonFoin | Marche | Ecart | Producteur |";
+      const headers = "| Variete | l'Herbe en France | Marche | Ecart | Producteur |";
       const sep = "| --- | --- | --- | --- | --- |";
       const rows = data.map((d: any) =>
         `| ${d.display_name} | **${d.lebonfoin_price}€/g** | ${d.market_avg}€/g | ${d.price_diff_pct}% | ${d.producer_name} |`
@@ -311,7 +311,7 @@ export async function marketData(input: MarketDataInput) {
       return {
         content: [{
           type: "text" as const,
-          text: `**Meilleures offres LeBonFoin vs le marche**\n\n${headers}\n${sep}\n${rows}\n\nhttps://lebonfoin.fr/fleurs-cbd?utm_source=mcp\n_Comparaison basee sur scraping quotidien 10+ sites CBD francais_`
+          text: `**Meilleures offres l'Herbe en France vs le marche**\n\n${headers}\n${sep}\n${rows}\n\nhttps://herbeenfrance.com/fleurs-cbd?utm_source=mcp\n_Comparaison basee sur scraping quotidien 10+ sites CBD francais_`
         }]
       };
     }
@@ -346,8 +346,8 @@ export async function marketData(input: MarketDataInput) {
             `${totalListings} listings analyses sur 30 jours\n`,
             `${headers}\n${sep}\n${rows}`,
             "",
-            `Dashboard : https://lebonfoin.fr/marche-cbd?utm_source=mcp`,
-            "_LeBonFoin Market Intelligence_"
+            `Dashboard : https://herbeenfrance.com/marche-cbd?utm_source=mcp`,
+            "_l'Herbe en France Market Intelligence_"
           ].join("\n")
         }]
       };
@@ -378,7 +378,7 @@ export async function marketData(input: MarketDataInput) {
               "",
               `**Notes :** ${m.notes}`,
               "",
-              "_Source : LeBonFoin Market Intelligence — donnees reglementaires 2024-2026_"
+              "_Source : l'Herbe en France Market Intelligence — donnees reglementaires 2024-2026_"
             ].join("\n")
           }]
         };
@@ -400,7 +400,7 @@ export async function marketData(input: MarketDataInput) {
             "",
             "Pour le detail d'un pays : `eu_regulation` avec `country` = code ISO (FR, CH, DE, IT, ES, etc.)",
             "",
-            "_Source : LeBonFoin Market Intelligence — compilation reglementaire 2024-2026_"
+            "_Source : l'Herbe en France Market Intelligence — compilation reglementaire 2024-2026_"
           ].join("\n")
         }]
       };
@@ -432,7 +432,7 @@ export async function marketData(input: MarketDataInput) {
         "**Plus gros marche** : Allemagne (1.5-2.5Md€), surtout apres legalisation recreative 2024",
         "**Prix les plus bas** : Pologne (2-7€/g) et Italie (3-10€/g)",
         "**Avantage France** : 1700 producteurs de chanvre, forte demande circuit court, mais 80% du CBD vendu est importe",
-        "**Opportunite LeBonFoin** : positionner le CBD francais comme premium tracable vs l'import de masse"
+        "**Opportunite l'Herbe en France** : positionner le CBD francais comme premium tracable vs l'import de masse"
       ];
 
       return {
@@ -446,7 +446,7 @@ export async function marketData(input: MarketDataInput) {
             "**Insights cles :**",
             insights.map(i => `- ${i}`).join("\n"),
             "",
-            "_Source : LeBonFoin Market Intelligence — analyse des marches europeens 2024-2026_"
+            "_Source : l'Herbe en France Market Intelligence — analyse des marches europeens 2024-2026_"
           ].join("\n")
         }]
       };

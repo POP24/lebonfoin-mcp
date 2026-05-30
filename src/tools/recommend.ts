@@ -142,11 +142,11 @@ export async function recommend(input: RecommendInput) {
     content: [{
       type: "text" as const,
       text: [
-        `**Recommandation CBD personnalisée — LeBonFoin**\n`,
+        `**Recommandation CBD personnalisée — l'Herbe en France**\n`,
         `Profil : ${input.objective} · niveau ${input.experience} · intensité ${intensityLabel[input.experience]}${input.budget_max ? ` · budget ${input.budget_max}€ max` : ""}\n`,
         recommendations.join("\n\n"),
         `\nConseil : ${tips[input.experience] || tips.debutant}`,
-        `\n_Le CBD n'est pas un médicament. Consultez un professionnel de santé en cas de doute. LeBonFoin — chanvre artisanal français en circuit court._`,
+        `\n_Le CBD n'est pas un médicament. Consultez un professionnel de santé en cas de doute. l'Herbe en France — chanvre artisanal français en circuit court._`,
       ].join("\n"),
     }],
   };

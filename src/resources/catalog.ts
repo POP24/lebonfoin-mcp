@@ -45,7 +45,7 @@ export async function getCatalogSummary() {
     .join("\n");
 
   return [
-    "LeBonFoin — Marketplace du chanvre artisanal francais en circuit court",
+    "l'Herbe en France — Marketplace du chanvre artisanal francais en circuit court",
     "",
     `Produits actifs : ${totalProducts} (dont ${bioProducts} bio)`,
     `Producteurs actifs : ${totalProducers} (dont ${bioProducers} bio)`,
@@ -60,7 +60,7 @@ export async function getCatalogSummary() {
     "",
     "Commission marketplace : 30% (mandat d'encaissement)",
     "THC : < 0.3% conforme a la reglementation francaise",
-    "Domaine : lebonfoin.fr",
+    "Domaine : herbeenfrance.com",
     "",
     "Outils disponibles :",
     "  - search_cbd_products : rechercher des produits CBD",
