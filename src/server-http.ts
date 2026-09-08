@@ -39,7 +39,7 @@ app.post("/messages", async (req, res) => {
     res.status(404).json({ error: "Session not found" });
     return;
   }
-  await transport.handlePostMessage(req, res);
+  await transport.handlePostMessage(req, res, req.body);
 });
 
 app.get("/health", (_req, res) => {
@@ -76,7 +76,7 @@ app.get("/", (_req, res) => {
     description: "Marketplace du chanvre artisanal francais en circuit court. Recherche de produits CBD, producteurs, guides, intelligence marche.",
     sse_endpoint: "/sse",
     health_endpoint: "/health",
-    documentation: "https://github.com/POP24/lebonfoin-mcp-server",
+    documentation: "https://github.com/POP24/lebonfoin-mcp",
   });
 });
 
