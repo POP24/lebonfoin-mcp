@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-1.12.1-blue.svg)](https://modelcontextprotocol.io)
-[![Railway](https://img.shields.io/badge/deployed-Railway-violet.svg)](https://railway.app)
+[![Hosted](https://img.shields.io/badge/hosted-herbeenfrance.com%2Fmcp-green.svg)](https://www.herbeenfrance.com/mcp)
 [![EU](https://img.shields.io/badge/region-EU%20West-blue.svg)](https://herbeenfrance.com)
 
 > **First Model Context Protocol (MCP) server for the European hemp & CBD market.**
@@ -10,7 +10,7 @@
 > a live encyclopedia (sourced from Légifrance, PubMed, INRAE, AFPC), and producer geolocation
 > to any MCP-compatible LLM (Claude, ChatGPT custom connectors, Cline, Cursor, …).
 
-🌐 **Live endpoint** : `https://lebonfoin-mcp-production.up.railway.app/sse`
+🌐 **Live endpoint** : `https://www.herbeenfrance.com/mcp` (Streamable HTTP, public, no authentication, all tools read-only)
 📦 **Marketplace** : https://herbeenfrance.com
 🏛️ **Wikidata** : [Q139847939](https://www.wikidata.org/wiki/Q139847939)
 
@@ -19,9 +19,11 @@
 ## ⚡ Quick health check
 
 ```bash
-curl https://lebonfoin-mcp-production.up.railway.app/health
-# {"status":"ok","version":"1.5.0","tools":15,"multilingual_tools":["debunk_cbd_myth","cbd_lab_analysis","cbd_legal_by_country"],"supported_languages":["fr","en"],"resources":4,"prompts":2}
+curl https://www.herbeenfrance.com/mcp
+# {"name":"L'Herbe en France MCP Server","version":"1.8.0","transport":"streamable-http","tools":15,"resources":4,"prompts":2,...}
 ```
+
+> **v1.8.0 (31/10/2026)** : the hosted server moved from Railway (SSE, now offline) to the herbeenfrance.com app itself, on the Streamable HTTP transport, with `readOnlyHint` annotations on every tool. This repository keeps the stdio / SSE build for self-hosting.
 
 ---
 
@@ -83,16 +85,18 @@ Each article is timestamped, versioned (Wikipedia-style revisions), and cross-re
 
 ---
 
-## 🚀 Use it from Claude Desktop
+## 🚀 Use it from Claude, Cursor or any MCP client
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` :
+- **Claude** (web / desktop) : Settings → Connectors → Add custom connector → `https://www.herbeenfrance.com/mcp`
+- **Claude Code** : `claude mcp add --transport http herbeenfrance https://www.herbeenfrance.com/mcp`
+- **Any client with a JSON config** :
 
 ```json
 {
   "mcpServers": {
-    "lebonfoin": {
-      "url": "https://lebonfoin-mcp-production.up.railway.app/sse",
-      "type": "sse"
+    "herbeenfrance": {
+      "type": "http",
+      "url": "https://www.herbeenfrance.com/mcp"
     }
   }
 }
@@ -122,9 +126,9 @@ Claude will call the relevant MCP tool, hit the live Supabase database, and answ
 ## 🏗️ Architecture
 
 ```
-┌──────────────┐       SSE        ┌──────────────────────────┐
+┌──────────────┐  Streamable HTTP ┌──────────────────────────┐
 │  Claude /    │ ───────────────► │  Herbe en France MCP Server    │
-│  ChatGPT /   │ ◄─ JSON-RPC ─── │  (Express, port $PORT)   │
+│  ChatGPT /   │ ◄─ JSON-RPC ─── │  (herbeenfrance.com/mcp) │
 │  Cline       │                  └────────────┬─────────────┘
 └──────────────┘                               │
                                                │ @supabase/supabase-js
@@ -139,7 +143,7 @@ Claude will call the relevant MCP tool, hit the live Supabase database, and answ
                                   └──────────────────────────┘
 ```
 
-Deployed on **Railway** in EU West (Netherlands) — GDPR compliant, no user tracking.
+Hosted by the herbeenfrance.com app on Vercel since v1.8.0. No user tracking : only UTM tags on outbound links and an anonymous per-tool call log (tool, parameters, result count, latency).
 
 ---
 
